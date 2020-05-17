@@ -9,4 +9,4 @@
 - Vue.js
 
 ## ER Diagram
-[https://github.com/JunjaK/WordBookJP/blob/master/ERD%20Schema.png?raw=true]
+![ERD](https://github.com/JunjaK/WordBookJP/blob/master/ERD%20Schema.png?raw=true)
