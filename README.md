@@ -1,2 +1,10 @@
 # WordBookJP
-일본어 단어장입니다. 자동으로 ime를 변경시켜줍니다.
+### 2020-1 Database Term-Project
+## Description
+- This is Japanese Word Book on Web!
+- The Feature of this app is Independant IME on Textinput.
+## Tech-Stack
+- MariaDB
+- Node.js
+- Vue.js
+

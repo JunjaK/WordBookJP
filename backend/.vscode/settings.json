@@ -1,0 +1,29 @@
+{
+    "editor.tabSize": 2,
+    "eslint.format.enable": true,
+    "eslint.packageManager": "yarn",
+    "eslint.validate": [{
+            "language": "vue",
+            "autoFix": true
+        }, //vue 체크
+        {
+            "language": "javascript",
+            "autoFix": true
+        }, //자바스크립트 체크
+        {
+            "language": "html",
+            "autoFix": true
+        }, //HTML 체크 <div></div> -> <div />
+    ],
+    "eslint.autoFixOnSave": true,
+    "eslint.alwaysShowStatus": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "octref.vetur"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+}
