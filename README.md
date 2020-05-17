@@ -4,7 +4,7 @@
 - This is Japanese Word Book on Web!
 - The Feature of this app is Independant IME on Textinput.
 ## Tech-Stack
-- MariaDB
+- MariaDB(MySQL)
 - Node.js
 - Vue.js
 - Raspi Server
