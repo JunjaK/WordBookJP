@@ -2,12 +2,8 @@
   "canvas": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 0,
-<<<<<<< HEAD
+    "scrollTop": 80,
     "scrollLeft": 0,
-=======
-    "scrollLeft": 50.85714340209961,
->>>>>>> 052c7425b8299101e932352a20ea691cc2a08e65
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -123,36 +119,13 @@
               "widthDefault": 60
             },
             "id": "e28bb523-7360-75f3-7e29-cec3bec6c4e9"
-          },
-          {
-            "name": "",
-            "comment": "",
-            "dataType": "",
-            "default": "",
-            "option": {
-              "autoIncrement": false,
-              "primaryKey": false,
-              "unique": false,
-              "notNull": false
-            },
-            "ui": {
-              "active": false,
-              "pk": false,
-              "fk": false,
-              "pfk": false,
-              "widthName": 60,
-              "widthComment": 60,
-              "widthDataType": 60,
-              "widthDefault": 60
-            },
-            "id": "69b90232-a7f8-d601-f933-c241a292b87f"
           }
         ],
         "ui": {
           "active": true,
           "left": 56,
           "top": 182,
-          "zIndex": 476,
+          "zIndex": 495,
           "widthName": 60,
           "widthComment": 60
         },
@@ -257,8 +230,8 @@
           {
             "name": "Wrong",
             "comment": "",
-            "dataType": "INT",
-            "default": "NULL",
+            "dataType": "BOOLEAN",
+            "default": "False",
             "option": {
               "autoIncrement": false,
               "primaryKey": false,
@@ -272,7 +245,7 @@
               "pfk": false,
               "widthName": 60,
               "widthComment": 60,
-              "widthDataType": 60,
+              "widthDataType": 61,
               "widthDefault": 60
             },
             "id": "991d5661-35da-6514-f219-2989614f57be"
@@ -351,7 +324,7 @@
           "active": false,
           "left": 668,
           "top": 170,
-          "zIndex": 474,
+          "zIndex": 491,
           "widthName": 60,
           "widthComment": 60
         },
@@ -410,9 +383,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 670,
-          "top": 555,
-          "zIndex": 472,
+          "left": 640,
+          "top": 547,
+          "zIndex": 493,
           "widthName": 60,
           "widthComment": 60
         },
@@ -494,9 +467,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 131,
-          "top": 405,
-          "zIndex": 473,
+          "left": 97,
+          "top": 487,
+          "zIndex": 477,
           "widthName": 62,
           "widthComment": 60
         },
@@ -507,13 +480,13 @@
   "memo": {
     "memos": [
       {
-        "value": "단어장\n1. 사용자\n2. 단어목록\n3. 카테고리\n\n기능\n1. 로그인 / 회원가입\n2. 단어 CUD\n3. 단어보기 - 페이지네이션\n4. 단어 검색 - 뜻 or 발음 / 등록 순\n5. 카테고리 : 카테고리 / 전체\n6. 시험 : 카테고리별, 전체 단어장 대상으로 시험, \n\n\n",
+        "value": "단어장\n1. 사용자\n2. 단어목록\n3. 카테고리\n4. 테스트 결과\n\n기능\n1. 로그인 / 회원가입\n2. 단어 CUD\n3. 단어보기 - 페이지네이션\n4. 단어 검색 - 뜻 or 발음 / 등록 순\n5. 카테고리 : 카테고리 / 전체\n6. 시험 : 카테고리별, 전체 단어장 대상으로 시험, \n\n\n",
         "id": "6bd2ad80-4f21-16b2-020d-2a218a260e18",
         "ui": {
           "active": false,
-          "left": 1052,
-          "top": 214,
-          "zIndex": 470,
+          "left": 1107,
+          "top": 201,
+          "zIndex": 483,
           "width": 325,
           "height": 277
         }
@@ -530,7 +503,7 @@
             "aa3202d7-e48f-2e1e-e3f3-fa73cd5a17c6"
           ],
           "x": 406,
-          "y": 267.75,
+          "y": 257.5,
           "direction": "right"
         },
         "end": {
@@ -552,8 +525,8 @@
           "columnIds": [
             "af485500-a33b-5a1c-ca31-3214b2cc38ed"
           ],
-          "x": 844.5,
-          "y": 555,
+          "x": 814.5,
+          "y": 547,
           "direction": "top"
         },
         "end": {
@@ -575,8 +548,8 @@
           "columnIds": [
             "1e224e97-1a23-c3b6-a9ee-257520cb12db"
           ],
-          "x": 479,
-          "y": 470.25,
+          "x": 445,
+          "y": 552.25,
           "direction": "right"
         },
         "end": {
