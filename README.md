@@ -6,7 +6,7 @@
 ## Member & Role
 - 2015104193 컴퓨터공학과 윤준현 (Frontend, Server, Backend)
 - 2015 컴퓨터공학과 김민중 (Backend, Database)
-- 2015 컴퓨터공학과 이종상 (Backend, Database)
+- 2015104206 컴퓨터공학과 이종상 (Backend, Database)
 ## Tech-Stack
 - MariaDB(MySQL)
 - Node.js
