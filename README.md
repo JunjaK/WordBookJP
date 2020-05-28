@@ -11,7 +11,7 @@
 - MariaDB(MySQL)
 - Node.js
 - Vue.js
-- Raspi Server
+- Rasberrypi4B Server
 
 ## ER Diagram
 ![ERD](https://github.com/JunjaK/WordBookJP/blob/master/ERD%20Schema.png?raw=true)
