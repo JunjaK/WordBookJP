@@ -2,9 +2,16 @@
 ### 2020-1 Database Term-Project
 ## Description
 - This is Japanese Word Book on Web!
-- The Feature of this app is Independant IME on Textinput.
+- The feature of this Web Work Book is specializing japanese word
+## Member
+- 2015104193 컴퓨터공학과 윤준현
+- 2015 컴퓨터공학과 김민중
+- 2015 
 ## Tech-Stack
-- MariaDB
+- MariaDB(MySQL)
 - Node.js
 - Vue.js
+- Raspi Server
 
+## ER Diagram
+![ERD](https://github.com/JunjaK/WordBookJP/blob/master/ERD%20Schema.png?raw=true)
