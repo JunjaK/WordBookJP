@@ -1,13 +1,130 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app id="inspire">
+    <v-app-bar elevation="1" flat fixed>
+      <v-btn icon color="primary" style="margin-right: -5px">
+        <v-icon>mdi-tag-multiple</v-icon>
+      </v-btn>
+      <div class="subTitleStyle">JP Wordbook</div>
+
+      <v-row class="mx-0" v-if="!$vuetify.breakpoint.xs && isLogin">
+        <v-spacer></v-spacer>
+        <div @click="$router.push('/')" class="titleStyle">HOME</div>
+        <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-10">|</div>
+        <div @click="$router.push('/test')" class="titleStyle">TEST</div>
+        <v-spacer></v-spacer>
+        <div v-if="isLogin" style="margin-top: 3px">
+          <a
+            @click="logOut()"
+            class="subTitleStyle"
+          >
+            <v-icon color="primary" class="mr-1 mt-n1">mdi-account-arrow-right</v-icon>
+            LOG OUT
+          </a>
+        </div>
+        <div v-else style="margin-top: 3px">
+          <a
+            @click="$router.push('/login')"
+            class="subTitleStyle"
+          >
+            <v-icon color="primary" class="mr-1 mt-n1">mdi-account-arrow-left</v-icon>
+            LOG IN
+          </a>
+        </div>
+      </v-row>
+      <v-row v-else>
+        <v-spacer></v-spacer>
+        <v-app-bar-nav-icon v-if="isLogin" style="color: #8ac6d1" @click="drawer=true"/>
+      </v-row>
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" app right temporary>
+      <div style="text-align: center; margin-top: 20px;" class="titleStyle">Menu</div>
+      <v-list>
+        <v-list-item-group color="primary" v-model="navIndex">
+          <v-list-item v-for="(item, i) in navMenu" :key="i" :to="item.to">
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <div class="contentStyle" v-text="item.text"></div>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+      <v-divider class="mx-3 my-2"></v-divider>
+    </v-navigation-drawer>
+
+    <v-content>
+      <router-view />
+    </v-content>
+
+    <v-footer></v-footer>
+  </v-app>
 </template>
 
-<style lang="scss">
+<script>
+export default {
+  data() {
+    return {
+      drawer: false,
+      isLogin: false,
+      navMenu: [
+        { icon: 'mdi-account-arrow-right', text: 'Log out' },
+        { icon: 'mdi-home', text: 'Home', to: { path: '/' } },
+        { icon: 'mdi-file-document-box-search', text: 'Test', to: { path: '/test' } },
+      ],
+      navIndex: 1,
+    };
+  },
+  created() {},
+  mounted() {
+    if (!this.$store.getters.getAccessToken) {
+      this.$router.push('/login');
+      this.isLogin = false;
+    } else {
+      this.isLogin = true;
+    }
+  },
+  methods: {},
+};
+</script>
+
+<style>
+a {
+  text-decoration: none;
+}
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+.titleStyle {
+  color: #3f3f44;
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 3px;
+}
+.subTitleStyle {
+  color: #8ac6d1;
+  font-size: 20px;
+  font-weight: 400;
+}
+.contentStyle {
+  color: #343a40;
+  font-size: 18px;
+  font-weight: 400;
+}
+.smallContentStyle{
+  font-size: 16px;
+  font-weight: 400;
+}
+.wordStyle{
+  font-size: 14px;
+  font-weight: 400;
+}
 
 </style>

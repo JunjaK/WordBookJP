@@ -6,7 +6,7 @@
           <v-tabs
             class="no-transition"
             background-color="#ffffff"
-            color="secondary"
+            color="primary"
             grow
             v-model="tab"
           >
@@ -17,12 +17,12 @@
             {{title}}
             <div class="my-2 signInDivider"></div>
           </div>
-          <div class="pa-12">
+          <div :class="$vuetify.breakpoint.xs ? 'pa-4' : 'pa-12'">
             <ValidationObserver ref="obs" v-slot="{ invalid, validated}">
               <v-form v-if="tab===0">
                 <ValidationProvider name="id" rules="required" v-slot="{ errors }">
                   <v-text-field
-                    color="secondary"
+                    color="primary"
                     label="ID"
                     v-model="LoginForm.id"
                     :error-messages="errors"
@@ -33,7 +33,7 @@
                 </ValidationProvider>
                 <ValidationProvider name="password" rules="required" v-slot="{ errors }">
                   <v-text-field
-                    color="secondary"
+                    color="primary"
                     label="Password"
                     ty
                     v-model="LoginForm.password"
@@ -43,17 +43,9 @@
                     type="password"
                   ></v-text-field>
                 </ValidationProvider>
-                <v-row justify="end" class="mr-0 mt-n7 mb-7">
+                <v-row class="mx-0 mt-6">
                   <v-btn
-                    text
-                    color="secondary"
-                    style="font-weight: 400; text-transform: none"
-                    @click="findPassword()"
-                  >Forgot Password?</v-btn>
-                </v-row>
-                <v-row class="mx-0">
-                  <v-btn
-                    color="secondary"
+                    color="primary"
                     style="margin: auto"
                     block
                     large
@@ -76,7 +68,7 @@
                     :counter="15"
                     :error-messages="errors"
                     label="ID"
-                    color="secondary"
+                    color="primary"
                     type="text"
                   ></v-text-field>
                 </ValidationProvider>
@@ -93,7 +85,7 @@
                     :error-messages="errors"
                     label="Nickname"
                     autocomplete
-                    color="secondary"
+                    color="primary"
                     type="text"
                   ></v-text-field>
                 </ValidationProvider>
@@ -110,7 +102,7 @@
                     :counter="30"
                     :error-messages="errors"
                     label="Password"
-                    color="secondary"
+                    color="primary"
                     type="password"
                   ></v-text-field>
                 </ValidationProvider>
@@ -127,7 +119,7 @@
                     :error-messages="errors"
                     :counter="30"
                     label="PasswordConfirm"
-                    color="secondary"
+                    color="primary"
                     type="password"
                   ></v-text-field>
                 </ValidationProvider>
@@ -140,12 +132,12 @@
                     label="E-mail"
                     autocomplete="email"
                     type="text"
-                    color="secondary"
+                    color="primary"
                   ></v-text-field>
                 </ValidationProvider>
 
                 <v-btn
-                  color="secondary"
+                  color="primary"
                   style="margin: auto; margin-top: 40px"
                   block
                   large
@@ -196,14 +188,14 @@ export default {
     };
   },
   created() {
-    this.title = 'Log In to Throw Box';
+    this.title = 'Log In to Wordbook';
   },
   watch: {
     tab(val) {
       if (val === 0) {
-        this.title = 'Log In to Throw Box';
+        this.title = 'Log In to Wordbook';
       } else {
-        this.title = 'Sign Up to Throw Box';
+        this.title = 'Sign Up to Wordbook';
       }
     },
   },
@@ -246,7 +238,7 @@ export default {
 .signInDivider {
   width: 70px;
   margin: auto;
-  background-color: #3f51b5;
+  background-color: #8ac6d1;
   height: 2px;
 }
 .SignInTitle {
@@ -256,5 +248,15 @@ export default {
   font-size: 30px;
   font-weight: 300;
   letter-spacing: 2px;
+}
+@media only screen and (max-width: 600px){
+  .SignInTitle {
+    font-size: 27px;
+  }
+}
+@media only screen and (max-width: 450px){
+  .SignInTitle {
+    font-size: 24px;
+  }
 }
 </style>

@@ -4,7 +4,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 const apiRootPath = process.env.NODE_ENV !== 'production'
-  ? 'http://localhost:8000/api/'
+  ? 'http://localhost:3000/api/'
   : '/api/';
 axios.defaults.baseURL = apiRootPath;
 
@@ -17,7 +17,6 @@ export default new Vuex.Store({
       refreshToken: localStorage.getItem('refreshToken'),
       expiryDtime: localStorage.getItem('expiryDtime'),
       userName: localStorage.getItem('userName'),
-      profileIMG: localStorage.getItem('profileIMG'),
     },
   },
   mutations: {
@@ -26,19 +25,16 @@ export default new Vuex.Store({
       state.userInfo.refreshToken = localStorage.getItem('refreshToken');
       state.userInfo.expiryDtime = localStorage.getItem('expiryDtime');
       state.userInfo.userName = localStorage.getItem('userName');
-      state.userInfo.profileIMG = localStorage.getItem('profileIMG');
     },
     delToken(state) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('expiryDtime');
       localStorage.removeItem('userName');
-      localStorage.removeItem('profileIMG');
       state.userInfo.accessToken = null;
       state.userInfo.refreshToken = null;
       state.userInfo.expiryDtime = null;
       state.userInfo.userName = null;
-      state.userInfo.profileIMG = null;
       window.location.replace('/signin');
     },
   },
@@ -47,7 +43,6 @@ export default new Vuex.Store({
     getRefreshToken: (state) => state.userInfo.refreshToken,
     getExpiryDtime: (state) => state.userInfo.expiryDtime,
     getUserName: (state) => state.userInfo.userName,
-    getProfileIMG: (state) => state.userInfo.profileIMG,
   },
   actions: {
     commitGetToken: (context) => context.commit('getToken'),
