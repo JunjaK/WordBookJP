@@ -20,7 +20,17 @@
     "canvasType": "ERD",
     "language": "GraphQL",
     "tableCase": "pascalCase",
-    "columnCase": "camelCase"
+    "columnCase": "camelCase",
+    "setting": {
+      "relationshipDataTypeSync": true,
+      "columnOrder": [
+        "columnName",
+        "columnDataType",
+        "columnNotNull",
+        "columnDefault",
+        "columnComment"
+      ]
+    }
   },
   "table": {
     "tables": [
@@ -122,7 +132,7 @@
           }
         ],
         "ui": {
-          "active": true,
+          "active": false,
           "left": 56,
           "top": 182,
           "zIndex": 495,
