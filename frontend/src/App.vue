@@ -6,13 +6,13 @@
       </v-btn>
       <div class="subTitleStyle">JP Wordbook</div>
 
-      <v-row class="mx-0" v-if="!$vuetify.breakpoint.xs && isLogin">
+      <v-row class="mx-0" v-if="!$vuetify.breakpoint.xs && getToken">
         <v-spacer></v-spacer>
-        <div @click="$router.push('/')" class="titleStyle">HOME</div>
+        <div @click="$router.push('/')" class="titleStyle" style="margin-left: -42px">HOME</div>
         <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-10">|</div>
         <div @click="$router.push('/test')" class="titleStyle">TEST</div>
         <v-spacer></v-spacer>
-        <div v-if="isLogin" style="margin-top: 3px">
+        <div v-if="getToken" style="margin-top: 3px">
           <a
             @click="logOut()"
             class="subTitleStyle"
@@ -33,11 +33,11 @@
       </v-row>
       <v-row v-else>
         <v-spacer></v-spacer>
-        <v-app-bar-nav-icon v-if="isLogin" style="color: #8ac6d1" @click="drawer=true"/>
+        <v-app-bar-nav-icon v-if="getToken" style="color: #8ac6d1" @click="drawer=true"/>
       </v-row>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app right temporary>
+    <v-navigation-drawer v-if="getToken" v-model="drawer" app right temporary>
       <div style="text-align: center; margin-top: 20px;" class="titleStyle">Menu</div>
       <v-list>
         <v-list-item-group color="primary" v-model="navIndex">
@@ -63,11 +63,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
+
 export default {
   data() {
     return {
       drawer: false,
-      isLogin: false,
       navMenu: [
         { icon: 'mdi-account-arrow-right', text: 'Log out' },
         { icon: 'mdi-home', text: 'Home', to: { path: '/' } },
@@ -76,16 +78,22 @@ export default {
       navIndex: 1,
     };
   },
+  computed: {
+    ...mapGetters({
+      getToken: 'getAccessToken',
+    }),
+  },
   created() {},
   mounted() {
-    if (!this.$store.getters.getAccessToken) {
+    if (!this.getToken) {
       this.$router.push('/login');
-      this.isLogin = false;
-    } else {
-      this.isLogin = true;
     }
   },
-  methods: {},
+  methods: {
+    logOut() {
+      this.$store.dispatch('commitDelToken');
+    },
+  },
 };
 </script>
 
@@ -126,5 +134,4 @@ a:visited {
   font-size: 14px;
   font-weight: 400;
 }
-
 </style>

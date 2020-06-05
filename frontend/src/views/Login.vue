@@ -2,6 +2,7 @@
   <v-sheet style="margin-top: 100px">
     <v-row justify="center">
       <v-col xs="10" sm="8" md="6" lg="4" class="mx-4">
+        <!--  -->
         <v-card elevation="0" class="pa-4" outlined>
           <v-tabs
             class="no-transition"
@@ -57,11 +58,7 @@
                 </v-row>
               </v-form>
               <v-form v-if="tab===1">
-                <ValidationProvider
-                  name="id"
-                  rules="required|min:4|max:15"
-                  v-slot="{ errors }"
-                >
+                <ValidationProvider name="id" rules="required|min:4|max:15" v-slot="{ errors }">
                   <v-text-field
                     prepend-inner-icon="mdi-account"
                     v-model="SignUpForm.id"
@@ -150,6 +147,15 @@
             </ValidationObserver>
           </div>
         </v-card>
+        <!--  -->
+        <!--  -->
+        <notify
+          @clickOk="notifyClickOk"
+          :onFlag="resultDialog"
+          :message1="rtMsg1"
+          :message2="rtMsg2"
+        />
+        <!--  -->
       </v-col>
     </v-row>
   </v-sheet>
@@ -164,11 +170,13 @@ nav {
 
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import notify from '../components/notify.vue';
 
 export default {
   components: {
     ValidationProvider,
     ValidationObserver,
+    notify,
   },
   data() {
     return {
@@ -184,11 +192,17 @@ export default {
         passwordConfirm: '',
         nickname: '',
       },
+      resultDialog: false,
+      isRedirect: false,
+      rtMsg1: null,
+      rtMsg2: null,
       tab: 0,
     };
   },
   created() {
     this.title = 'Log In to Wordbook';
+    this.rtMsg1 = 'You are succesfully registered!';
+    this.rtMsg2 = 'Please Log in in with your account.';
   },
   watch: {
     tab(val) {
@@ -201,34 +215,52 @@ export default {
   },
   methods: {
     Login() {
-      console.log(this.LoginForm);
-      // this.$axios
-      //   .post('/auth/token', this.form)
-      //   .then((r) => {
-      //     localStorage.setItem('accessToken', r.data.accessToken);
-      //     localStorage.setItem('refreshToken', r.data.refreshToken);
-      //     localStorage.setItem('expiryDtime', r.data.expiryDtime);
-      //     this.$axios
-      //       .get('/mypage/profile', {
-      //         headers: { 'X-AUTH-TOKEN': r.data.accessToken },
-      //       })
-      //       .then((userData) => {
-      //         localStorage.setItem('userName', userData.data.engName);
-      //         const base64 = `data:img/png;base64, ${userData.data.base64Photo}`;
-      //         localStorage.setItem('profileIMG', base64);
-      //         this.$store.dispatch('commitGetToken');
-      //         this.$router.replace('/');
-      //       });
-      //   })
-      //   .catch((e) => {
-      //     console.log(e);
-      //   });
+      this.rtMsg1 = null;
+      this.rtMsg2 = null;
+      this.$axios
+        .post('sign/in', this.LoginForm)
+        .then((r) => {
+          localStorage.setItem('accessToken', r.data.token);
+          localStorage.setItem('nickname', r.data.nickname);
+          this.$store.dispatch('commitGetToken');
+          this.$router.push('/');
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
     },
     SignUp() {
-      console.log(this.SignUpForm);
+      this.rtMsg1 = null;
+      this.rtMsg2 = null;
+      this.$axios
+        .post('sign/up', this.SignUpForm)
+        .then(() => {
+          this.resultDialog = true;
+          this.isRedirect = true;
+          this.rtMsg1 = 'You are succesfully registered JP Wordbook Service!';
+          this.rtMsg2 = 'Please Log in in with your account.';
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.isRedirect = false;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
     },
-    findPassword() {
-
+    notifyClickOk() {
+      this.resultDialog = false;
+      if (this.isRedirect) {
+        this.SignUpForm = {
+          id: '',
+          email: '',
+          password: '',
+          passwordConfirm: '',
+          nickname: '',
+        };
+        this.tab = 0;
+      }
     },
   },
 };
@@ -249,12 +281,12 @@ export default {
   font-weight: 300;
   letter-spacing: 2px;
 }
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px) {
   .SignInTitle {
     font-size: 27px;
   }
 }
-@media only screen and (max-width: 450px){
+@media only screen and (max-width: 450px) {
   .SignInTitle {
     font-size: 24px;
   }
