@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar elevation="1" flat fixed>
+    <v-app-bar elevation="1" app fixed flat absolute>
       <v-btn icon color="primary" style="margin-right: -5px">
         <v-icon>mdi-tag-multiple</v-icon>
       </v-btn>

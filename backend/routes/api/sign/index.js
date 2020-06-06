@@ -53,6 +53,7 @@ router.post('/up', (req, res) => {
       });
     }
   });
+  mysqlCon.end();
 });
 
 router.post('/in', (req, res) => {
@@ -65,6 +66,7 @@ router.post('/in', (req, res) => {
       res.status(200).send({ success: true, token, nickname: r1[0].nickname });
     }
   });
+  mysqlCon.end();
 });
 
 router.all('*', (req, res, next) => {

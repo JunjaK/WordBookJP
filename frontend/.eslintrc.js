@@ -17,6 +17,5 @@ module.exports = {
     indent: [2, 2],
     'no-param-reassign': 'off',
     'no-unused-vars': 'warn',
-
   },
 };

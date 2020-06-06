@@ -200,6 +200,8 @@ export default {
     };
   },
   created() {
+    this.$axios.defaults.baseURL = 'http://localhost:3333/api';
+    console.log();
     this.title = 'Log In to Wordbook';
     this.rtMsg1 = 'You are succesfully registered!';
     this.rtMsg2 = 'Please Log in in with your account.';
@@ -218,7 +220,7 @@ export default {
       this.rtMsg1 = null;
       this.rtMsg2 = null;
       this.$axios
-        .post('sign/in', this.LoginForm)
+        .post('/sign/in', this.LoginForm)
         .then((r) => {
           localStorage.setItem('accessToken', r.data.token);
           localStorage.setItem('nickname', r.data.nickname);
@@ -235,7 +237,7 @@ export default {
       this.rtMsg1 = null;
       this.rtMsg2 = null;
       this.$axios
-        .post('sign/up', this.SignUpForm)
+        .post('/sign/up', this.SignUpForm)
         .then(() => {
           this.resultDialog = true;
           this.isRedirect = true;
@@ -243,6 +245,7 @@ export default {
           this.rtMsg2 = 'Please Log in in with your account.';
         })
         .catch((e) => {
+          console.log(e);
           this.resultDialog = true;
           this.isRedirect = false;
           this.rtMsg1 = `Error! http-error code ${e.response.status}`;

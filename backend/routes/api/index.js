@@ -55,8 +55,8 @@ router.all('*', (req, res, next) => {
     .catch((e) => next(createError(401, e.message)));
 });
 
-router.use('/home', require('./home'));
-router.use('/mypage', require('./mypage'));
+router.use('/word', require('./word'));
+router.use('/profile', require('./profile'));
 router.use('/test', require('./test'));
 
 router.all('*', (req, res, next) => {
