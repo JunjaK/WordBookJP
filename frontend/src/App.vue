@@ -98,6 +98,11 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP:100,300,400,500&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+KR:100,300,400,500&display=swap");
+#inspire {
+  font-weight: 400;
+}
 a {
   text-decoration: none;
 }

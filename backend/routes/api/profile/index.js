@@ -1,10 +1,10 @@
+/* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 const express = require('express');
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 const secret = require('../../../lib/tokenKey');
 
-const mysqlCon = require('../../../lib/dbConnect')();
 
 const router = express.Router();
 
@@ -16,17 +16,17 @@ const verifyToken = (t) => new Promise((resolve, reject) => {
 });
 
 router.get('/myinfo', async (req, res) => {
-  console.log(req.headers.authorization);
+  const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
   const resolvedToken = await verifyToken(req.headers.authorization);
   mysqlCon.query(`select id, nickname, email from user where id = '${resolvedToken.id}'`, (e1, r1) => {
-    if (r1.length === 0) {
+    if (r1 === undefined) {
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });
     } else {
       res.status(200).send({ success: true, r: { id: r1[0].id, nickname: r1[0].nickname, email: r1[0].email } });
+      mysqlCon.end();
     }
   });
-  mysqlCon.end();
 });
 
 router.all('*', (req, res, next) => {

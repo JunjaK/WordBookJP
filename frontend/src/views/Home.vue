@@ -7,7 +7,10 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <a>
-                  <div class="categoryTitle ml-4" v-on="{ ...tooltip, ...menu }">{{selectedCategory}}</div>
+                  <div
+                    class="categoryTitle ml-4"
+                    v-on="{ ...tooltip, ...menu }"
+                  >{{selectedCategory}}</div>
                 </a>
               </template>
               <span>Select Category</span>
@@ -54,12 +57,15 @@
       <v-layout justify-center class="mt-12">
         <v-flex xs12 sm8 md6>
           <!-- search -->
-          <v-row class="ml-5 mr-2">
+          <v-row class="ml-0 mr-0">
             <v-text-field
               :label="searchMyWordBook ? 'Search in my Wordbook' : 'Search in NaverDict'"
+              v-model="params.search"
               single-line
               outlined
-              prepend-inner-icon="mdi-magnify"
+              append-icon="mdi-magnify"
+              @keydown.enter="searchOn"
+              @click:append="searchOn"
             ></v-text-field>
             <v-menu bottom offset-x>
               <template v-slot:activator="{ on }">
@@ -67,19 +73,25 @@
                   <v-icon
                     v-on="on"
                     size="30"
-                    style="margin-left: 5px;margin-top: 13px"
+                    style="margin-left: 5px; margin-top: 13px"
                   >mdi-dots-vertical</v-icon>
                 </a>
               </template>
               <v-list>
                 <v-list-item>
                   <a>
-                    <div class="categorySelect" @click="searchMyWordBook = true">My Wordbook</div>
+                    <div
+                      class="categorySelect"
+                      @click="params.search = ''; searchMyWordBook = true"
+                    >My Wordbook</div>
                   </a>
                 </v-list-item>
                 <v-list-item>
                   <a>
-                    <div class="categorySelect" @click="searchMyWordBook = false">NaverDict</div>
+                    <div
+                      class="categorySelect"
+                      @click="params.search = ''; searchMyWordBook = false"
+                    >NaverDict</div>
                   </a>
                 </v-list-item>
               </v-list>
@@ -88,37 +100,128 @@
           <!--  -->
 
           <!-- word -->
-          <v-flex v-for="word in words" :key="word.id">
-            <v-card outlined>
-              <v-row justify="space-between" class="mx-0">
-                <div class="wordText">{{word.word}}</div>
-                <div class="wordText">{{word.mean}}</div>
-                <div class="wordText">{{word.pronounce}}</div>
+          <div style="float: right">
+            <v-btn
+              color="secondary"
+              small
+              @click="hideMean ? hideMean = false : hideMean = true"
+              style="text-transform: none;"
+            >{{hideMean ? 'See Mean' : 'Hide Mean'}}</v-btn>
+          </div>
+          <div class="mt-10">
+            <v-card elevation="1" class="pa-2" color="info">
+              <v-row class="mx-0" justify="space-between">
+                <div class="wordText">Word</div>
+                <div class="wordText">Mean</div>
+                <div class="wordText">Pronounce</div>
               </v-row>
             </v-card>
-            <v-divider></v-divider>
-          </v-flex>
+            <v-flex v-for="word in wordsList" :key="word.id" class="mt-2 mx-1">
+              <div class="pa-1">
+                <a><v-row justify="space-between" class="mx-0">
+                  <div class="wordText" style="font-family: Noto Sans JP;">{{word.word}}</div>
+                  <div class="wordText" style="font-family: Noto Sans KR;" :style="hideMean ? 'visibility: hidden' : ''">{{word.mean}}</div>
+                  <div
+                    class="wordText" style="font-family: Noto Sans JP;"
+                    :style="hideMean ? 'visibility: hidden' : ''"
+                  >{{word.pronounce}}</div>
+                </v-row></a>
+              </div>
+              <v-divider></v-divider>
+            </v-flex>
+          </div>
           <!--  -->
+          <!-- pagination -->
+          <div style="visibility: hidden" :style="{'margin-top': (30-wordsList.length)*5+'px'}">a</div>
+          <div class="text-center mt-4">
+            <v-pagination
+            color="secondary"
+              v-model="pagination.page"
+              :length="setPage"
+              :total-visible="5"
+              next-icon="mdi-menu-right"
+              prev-icon="mdi-menu-left"
+            ></v-pagination>
+          </div>
         </v-flex>
       </v-layout>
+
       <!-- CU dailogs -->
-      <v-dialog max-width="500" v-model="wordCuDialog.flag">
+      <!-- Word -->
+      <v-dialog max-width="500" v-model="wordCuDialog.flag" persistent>
         <v-card max-width="500" outlined class="pa-3">
-          <div></div>
-          <v-row justify="end">
-            <v-btn @click="saveWord">Save</v-btn>
-            <v-btn @click="s">Cancel</v-btn>
-          </v-row>
+          <div class="dialogTitle">{{wordCuDialog.op === 'add' ? 'Save Word' : 'Update Word'}}</div>
+          <div class="mt-1 mb-6 homeDivider"></div>
+          <ValidationObserver ref="obs" v-slot="{ invalid, validated}">
+            <ValidationProvider name="id" rules="required" v-slot="{ errors }">
+              <v-text-field
+                color="primary"
+                label="Word"
+                v-model="wordForm.word"
+                :error-messages="errors"
+                clearable
+                outlined
+                type="text"
+              ></v-text-field>
+            </ValidationProvider>
+            <v-text-field
+              color="primary"
+              label="Mean"
+              v-model="wordForm.mean"
+              clearable
+              outlined
+              type="text"
+            ></v-text-field>
+            <v-text-field
+              color="primary"
+              label="Pronounce"
+              v-model="wordForm.pronounce"
+              clearable
+              outlined
+              type="text"
+            ></v-text-field>
+            <v-row justify="end" class="mx-0">
+              <v-btn
+                color="primary"
+                @click="wordCuDialog.op === 'add' ? saveWord() : updateWord()"
+                :disabled="invalid || !validated"
+              >Save</v-btn>
+              <v-btn v-if="wordCuDialog.op === 'update'" color="warning" class="mx-3" @click="deleteWord()">Delete</v-btn>
+              <v-btn color="error" @click="closeWordCuDialog">Cancel</v-btn>
+            </v-row>
+          </ValidationObserver>
         </v-card>
       </v-dialog>
+      <!-- category -->
+
       <!--  -->
       <!-- dialogs -->
       <notify
-          @clickOk="notifyClickOk"
-          :onFlag="resultDialog"
-          :message1="rtMsg1"
-          :message2="rtMsg2"
-        />
+        @clickOk="notifyClickOk"
+        :onFlag="resultDialog"
+        :message1="rtMsg1"
+        :message2="rtMsg2"
+      />
+
+      <v-dialog v-model="naverDictDialog" max-width="2000" persistent>
+        <v-card max-width="2000" height="1000">
+          <v-row style="position: absolute; z-index: 999;" class="ml-1 mt-1">
+            <v-avatar
+              size="25"
+              style="background-color: #5a5a5a; opacity: 0.6"
+              @click="naverDictDialog = false"
+            >
+              <a>
+                <v-icon color="white" size="20">mdi-close</v-icon>
+              </a>
+            </v-avatar>
+          </v-row>
+          <iframe
+            style="width:100%; height: 100%; position: relative; z-index: 5"
+            :src="searchNaverDictUrl"
+          ></iframe>
+        </v-card>
+      </v-dialog>
       <!--  -->
       <!-- add Button -->
       <v-btn
@@ -129,7 +232,7 @@
         right
         elevation="2"
         fixed
-        @click="wordCuDialog.flag = true"
+        @click="wordCuDialog = { op: 'add', flag: true } "
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -142,7 +245,7 @@
         elevation="2"
         fixed
         style="margin-top: 125px; margin-right: 30px"
-        @click="wordCuDialog = true"
+        @click="wordCuDialog = { op: 'add', flag: true }"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -152,6 +255,9 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
+import { mapGetters } from 'vuex';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
+
 import alert from '../components/alert.vue';
 import notify from '../components/notify.vue';
 
@@ -160,6 +266,8 @@ export default {
   components: {
     alert,
     notify,
+    ValidationProvider,
+    ValidationObserver,
   },
   data() {
     return {
@@ -174,7 +282,8 @@ export default {
       selectedCategory: 'All words',
 
       // wordbook
-      words: [],
+      wordsList: [],
+      selectedWord: {},
       wordForm: {
         word: null,
         mean: null,
@@ -184,7 +293,7 @@ export default {
       },
       params: {
         category: null,
-        search: null,
+        search: '',
         limit: 30,
       },
       pagination: {
@@ -192,13 +301,14 @@ export default {
         totalItems: 0,
         rowsPerPage: 30,
       },
-
+      hideMean: false,
       // dialog
       categoryCuDialog: { op: 'add', flag: false },
       wordCuDialog: { op: 'add', flag: false },
       alertDialog: false,
       resultDialog: false,
-
+      naverDictDialog: false,
+      searchNaverDictUrl: null,
       searchMyWordBook: true,
 
       rtMsg1: null,
@@ -208,8 +318,13 @@ export default {
   },
   created() {
     this.getUserInfo();
+    this.loadWords();
   },
   computed: {
+    ...mapGetters({
+      getToken: 'getAccessToken',
+      getNickname: 'getNickname',
+    }),
     setSkip() {
       if (this.pagination.page <= 0) return 0;
       return (this.pagination.page - 1) * this.pagination.rowsPerPage;
@@ -240,9 +355,7 @@ export default {
           this.rtMsg2 = e.response.data.msg;
         });
     },
-    loadCategory() {
-
-    },
+    loadCategory() {},
     callCudCategory(op) {
       if (op === 'Create') {
         this.categoryForm.category = null;
@@ -254,28 +367,37 @@ export default {
         this.alertDialog = true;
       }
     },
-    createCategory() {
-
-    },
-    updateCategory() {
-
-    },
-    deleteCategory() {
-
-    },
+    createCategory() {},
+    updateCategory() {},
+    deleteCategory() {},
 
     loadWords() {
-      this.params.category = this.selectedCategory === 'All Words' ? '' : this.selectedCategory;
+      this.params.skip = this.setSkip;
+      this.params.userid = this.getNickname;
+      this.params.category = this.selectedCategory === 'All words' ? '' : this.selectedCategory;
+      this.$axios
+        .get('/word/list', { params: this.params })
+        .then((r) => {
+          this.wordsList = r.data.r.list;
+          this.pagination.totalItems = r.data.r.total;
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
     },
 
     saveWord() {
       this.wordCuDialog.flag = false;
       this.wordForm.userid = this.userInfo.id;
-      this.wordForm.category = this.selectedCategory === 'All Words' ? '' : this.selectedCategory;
+      this.wordForm.category = this.selectedCategory === 'All words' ? '' : this.selectedCategory;
       this.$axios
-        .get('/word/save', this.wordForm)
+        .post('/word/save', this.wordForm)
         .then((r) => {
           this.userInfo = r.data.r;
+          this.closeWordCuDialog();
+          this.loadWords();
         })
         .catch((e) => {
           this.resultDialog = true;
@@ -287,29 +409,13 @@ export default {
     updateWord() {},
     deleteWord() {},
 
-    changeSearchModel() {
-      this.params.search = null;
+    searchOn() {
       if (this.searchMyWordBook) {
-        console.log();
+        this.loadWords();
       } else {
-        console.log();
+        this.naverDictDialog = true;
+        this.searchNaverDictUrl = `https://ja.dict.naver.com/#/search?query=${this.params.search}&range=all`;
       }
-    },
-    checkWordCu(op) {
-      if (op === 'add') {
-        this.wordCuDialog.op = 'add';
-      } else {
-        this.wordCuDialog.op = 'update';
-      }
-      this.wordCuDialog.flag = true;
-    },
-    checkCategoryCu(op) {
-      if (op === 'add') {
-        this.categoryCuDialog.op = 'add';
-      } else {
-        this.categoryCuDialog.op = 'update';
-      }
-      this.categoryCuDialog.flag = true;
     },
     notifyClickOk() {
       this.resultDialog = false;
@@ -318,11 +424,35 @@ export default {
       this.wordForm.pronounce = null;
       this.categoryForm.category = null;
     },
+    closeWordCuDialog() {
+      this.wordCuDialog.flag = false;
+      this.wordForm.word = null;
+      this.wordForm.mean = null;
+      this.wordForm.pronounce = null;
+    },
+    closeCategoryCuDialog() {
+      this.categoryCuDialog.flag = false;
+      this.categoryForm.category = null;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.dialogTitle {
+  color: #343a40;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+.dialogSubTitle {
+  color: #5a5a5a;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
 .homeDivider {
   width: 70px;
   margin: auto;
@@ -340,7 +470,7 @@ export default {
   color: #3f3f44;
 }
 .wordText {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   color: #3f3f44;
 }

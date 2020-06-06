@@ -200,8 +200,6 @@ export default {
     };
   },
   created() {
-    this.$axios.defaults.baseURL = 'http://localhost:3333/api';
-    console.log();
     this.title = 'Log In to Wordbook';
     this.rtMsg1 = 'You are succesfully registered!';
     this.rtMsg2 = 'Please Log in in with your account.';

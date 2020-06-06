@@ -25,7 +25,7 @@ export default new Vuex.Store({
   },
   getters: {
     getAccessToken: (state) => state.userInfo.accessToken,
-    getnickname: (state) => state.userInfo.nickname,
+    getNickname: (state) => state.userInfo.nickname,
   },
   actions: {
     commitGetToken: (context) => context.commit('getToken'),
