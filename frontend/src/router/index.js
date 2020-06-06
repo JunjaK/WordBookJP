@@ -5,7 +5,7 @@ import axios from 'axios';
 Vue.use(VueRouter);
 
 Vue.prototype.$axios = axios;
-const apiRootPath = process.env.NODE_ENV !== 'production' ? 'http://localhost:3333/api' : '/api';
+const apiRootPath = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/api' : '/api';
 // const apiRootPath = process.env.NODE_ENV !== 'production' ? 'http://192.168.152.197:3333/api' : '/api';
 Vue.prototype.$apiRootPath = apiRootPath;
 axios.defaults.baseURL = apiRootPath;
