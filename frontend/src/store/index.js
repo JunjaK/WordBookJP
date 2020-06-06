@@ -1,11 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios';
-
-const apiRootPath = process.env.NODE_ENV !== 'production'
-  ? 'http://localhost:3000/api/'
-  : '/api/';
-axios.defaults.baseURL = apiRootPath;
 
 Vue.use(Vuex);
 

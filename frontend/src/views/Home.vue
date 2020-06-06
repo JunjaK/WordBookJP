@@ -7,7 +7,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <a>
-                  <div class="categoryTitle ml-4" v-on="{ ...tooltip, ...menu }">{{params.category}}</div>
+                  <div class="categoryTitle ml-4" v-on="{ ...tooltip, ...menu }">{{selectedCategory}}</div>
                 </a>
               </template>
               <span>Select Category</span>
@@ -16,7 +16,7 @@
           <v-list>
             <v-list-item
               v-for="(item) in categories"
-              @click="params.category = item"
+              @click="selectedCategory = item"
               :key="item.id"
             >
               <div class="categorySelect">{{ item }}</div>
@@ -101,6 +101,25 @@
           <!--  -->
         </v-flex>
       </v-layout>
+      <!-- CU dailogs -->
+      <v-dialog max-width="500" v-model="wordCuDialog.flag">
+        <v-card max-width="500" outlined class="pa-3">
+          <div></div>
+          <v-row justify="end">
+            <v-btn @click="saveWord">Save</v-btn>
+            <v-btn @click="s">Cancel</v-btn>
+          </v-row>
+        </v-card>
+      </v-dialog>
+      <!--  -->
+      <!-- dialogs -->
+      <notify
+          @clickOk="notifyClickOk"
+          :onFlag="resultDialog"
+          :message1="rtMsg1"
+          :message2="rtMsg2"
+        />
+      <!--  -->
       <!-- add Button -->
       <v-btn
         v-if="$vuetify.breakpoint.xs"
@@ -110,7 +129,7 @@
         right
         elevation="2"
         fixed
-        @click="wordCuDialog = true"
+        @click="wordCuDialog.flag = true"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -152,14 +171,19 @@ export default {
       },
       categories: ['All Words'],
       categoryOp: ['Create', 'Update', 'Delete'],
+      selectedCategory: 'All words',
 
       // wordbook
       words: [],
       wordForm: {
-
+        word: null,
+        mean: null,
+        pronounce: null,
+        uesrid: null,
+        category: null,
       },
       params: {
-        category: 'All Words',
+        category: null,
         search: null,
         limit: 30,
       },
@@ -170,8 +194,8 @@ export default {
       },
 
       // dialog
-      categoryCuDialog: false,
-      wordCuDialog: false,
+      categoryCuDialog: { op: 'add', flag: false },
+      wordCuDialog: { op: 'add', flag: false },
       alertDialog: false,
       resultDialog: false,
 
@@ -241,12 +265,24 @@ export default {
     },
 
     loadWords() {
-      if (this.params.category === 'All Words') {
-        this.params.category = '';
-      }
+      this.params.category = this.selectedCategory === 'All Words' ? '' : this.selectedCategory;
     },
 
-    saveWord() {},
+    saveWord() {
+      this.wordCuDialog.flag = false;
+      this.wordForm.userid = this.userInfo.id;
+      this.wordForm.category = this.selectedCategory === 'All Words' ? '' : this.selectedCategory;
+      this.$axios
+        .get('/word/save', this.wordForm)
+        .then((r) => {
+          this.userInfo = r.data.r;
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
 
     updateWord() {},
     deleteWord() {},
@@ -258,6 +294,29 @@ export default {
       } else {
         console.log();
       }
+    },
+    checkWordCu(op) {
+      if (op === 'add') {
+        this.wordCuDialog.op = 'add';
+      } else {
+        this.wordCuDialog.op = 'update';
+      }
+      this.wordCuDialog.flag = true;
+    },
+    checkCategoryCu(op) {
+      if (op === 'add') {
+        this.categoryCuDialog.op = 'add';
+      } else {
+        this.categoryCuDialog.op = 'update';
+      }
+      this.categoryCuDialog.flag = true;
+    },
+    notifyClickOk() {
+      this.resultDialog = false;
+      this.wordForm.word = null;
+      this.wordForm.mean = null;
+      this.wordForm.pronounce = null;
+      this.categoryForm.category = null;
     },
   },
 };
