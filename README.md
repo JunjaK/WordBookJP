@@ -5,7 +5,7 @@
 - The feature of this Web Work Book is specializing japanese word
 ## Member & Role
 - 2015104193 컴퓨터공학과 윤준현 (Frontend, Server, Backend)
-- 2015 컴퓨터공학과 김민중 (Backend, Database)
+- 2015100592 컴퓨터공학과 김민중 (Backend, Database)
 - 2015104206 컴퓨터공학과 이종상 (Backend, Database)
 ## Tech-Stack
 - MariaDB(MySQL)
