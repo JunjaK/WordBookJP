@@ -117,7 +117,12 @@
               </v-row>
             </v-card>
             <v-flex v-for="word in wordsList" :key="word.id" class="mt-2 mx-1">
-              <div class="pa-1">
+              <div class="pa-1"
+              @click="wordCuDialog = { op: 'update', flag: true };
+                wordForm.word=word.word;
+                wordForm.mean=word.mean;
+                wordForm.pronounce=word.pronounce;"
+              >
                 <a><v-row justify="space-between" class="mx-0">
                   <div class="wordText" style="font-family: Noto Sans JP;">{{word.word}}</div>
                   <div class="wordText" style="font-family: Noto Sans KR;" :style="hideMean ? 'visibility: hidden' : ''">{{word.mean}}</div>
@@ -138,7 +143,6 @@
             color="secondary"
               v-model="pagination.page"
               :length="setPage"
-              :total-visible="5"
               next-icon="mdi-menu-right"
               prev-icon="mdi-menu-left"
             ></v-pagination>
@@ -182,18 +186,45 @@
             ></v-text-field>
             <v-row justify="end" class="mx-0">
               <v-btn
+              class="mr-3"
                 color="primary"
                 @click="wordCuDialog.op === 'add' ? saveWord() : updateWord()"
                 :disabled="invalid || !validated"
               >Save</v-btn>
-              <v-btn v-if="wordCuDialog.op === 'update'" color="warning" class="mx-3" @click="deleteWord()">Delete</v-btn>
+              <v-btn v-if="wordCuDialog.op === 'update'" color="warning" class="mr-3" @click="deleteWord()">Delete</v-btn>
               <v-btn color="error" @click="closeWordCuDialog">Cancel</v-btn>
             </v-row>
           </ValidationObserver>
         </v-card>
       </v-dialog>
       <!-- category -->
-
+      <v-dialog max-width="500" v-model="categoryCuDialog.flag" persistent>
+        <v-card max-width="500" outlined class="pa-3">
+          <div class="dialogTitle">{{categoryCuDialog.op === 'add' ? 'Add Category' : 'Update Category'}}</div>
+          <div class="mt-1 mb-6 homeDivider"></div>
+          <ValidationObserver ref="obs" v-slot="{ invalid, validated}">
+            <ValidationProvider name="id" rules="required" v-slot="{ errors }">
+              <v-text-field
+                color="primary"
+                label="Category"
+                v-model="categoryForm.category"
+                :error-messages="errors"
+                clearable
+                outlined
+                type="text"
+              ></v-text-field>
+            </ValidationProvider>
+            <v-row justify="end" class="mx-0">
+              <v-btn
+                color="primary"
+                @click="categoryCuDialog.op === 'add' ? createCategory() : updateCategory()"
+                :disabled="invalid || !validated"
+              >Save</v-btn>
+              <v-btn color="error" class="ml-3" @click="closeCategoryCuDialog">Cancel</v-btn>
+            </v-row>
+          </ValidationObserver>
+        </v-card>
+      </v-dialog>
       <!--  -->
       <!-- dialogs -->
       <notify
@@ -226,12 +257,14 @@
       <!-- add Button -->
       <v-btn
         v-if="$vuetify.breakpoint.xs"
+        small
         fab
         color="primary"
         bottom
         right
         elevation="2"
         fixed
+        class="mt-n3"
         @click="wordCuDialog = { op: 'add', flag: true } "
       >
         <v-icon>mdi-plus</v-icon>
@@ -343,6 +376,15 @@ export default {
     },
   },
   methods: {
+    createDummy() {
+      this.$axios.get('/word/dummy')
+        .then((r) => {
+          console.log(r);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     getUserInfo() {
       this.$axios
         .get('/profile/myinfo')
@@ -359,12 +401,21 @@ export default {
     callCudCategory(op) {
       if (op === 'Create') {
         this.categoryForm.category = null;
-        this.categoryCuDialog = true;
+        this.categoryCuDialog = { op: 'add', flag: true };
       } else if (op === 'Update') {
-        this.categoryForm.category = this.params.category;
-        this.categoryCuDialog = true;
+        if (this.selectedCategory === 'All words') {
+          this.resultDialog = true;
+          this.rtMsg1 = 'All words Category cannot Update';
+        } else {
+          this.categoryForm.category = this.selectedCategory;
+          this.categoryCuDialog = { op: 'add', flag: true };
+        }
+      } else if (this.selectedCategory === 'All words') {
+        this.resultDialog = true;
+        this.rtMsg1 = 'All words Category cannot Delete';
       } else {
-        this.alertDialog = true;
+        this.categoryForm.category = this.selectedCategory;
+        this.deleteCategory();
       }
     },
     createCategory() {},
