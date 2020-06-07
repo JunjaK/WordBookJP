@@ -264,7 +264,7 @@
         right
         elevation="2"
         fixed
-        class="mt-n3"
+        style="margin-bottom: 50px;"
         @click="wordCuDialog = { op: 'add', flag: true } "
       >
         <v-icon>mdi-plus</v-icon>
