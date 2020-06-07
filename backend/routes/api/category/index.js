@@ -5,7 +5,6 @@ const createError = require('http-errors');
 
 const router = express.Router();
 
-
 router.get('/list', (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
@@ -30,7 +29,6 @@ router.get('/list', (req, res) => {
   }
   mysqlCon.query(queryCnt, (e1, r1) => {
     console.log(e1);
-    console.log(r1);
     if (e1) {
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });
     } else {
@@ -60,7 +58,6 @@ router.post('/save', async (req, res) => {
   }
   mysqlCon.query(query,
     (e1, r1) => {
-      console.log(r1);
       console.log(e1);
       if (e1) {
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });

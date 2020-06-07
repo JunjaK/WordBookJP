@@ -5,6 +5,20 @@ const createError = require('http-errors');
 
 const router = express.Router();
 
+// router.get('/dummy', (req, res) => {
+//   const mysqlCon = require('../../../lib/dbConnect')();
+//   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+//   for (let i = 0; i < 5000; i += 1) {
+//     const query = `insert into word (word, mean, pronounce, userid)  values('word${i}', 'mean${i}', 'pronoun${i}', '${1234}')`;
+//     mysqlCon.query(query,
+//       (e1, r1) => {
+//         console.log(r1);
+//         console.log(e1);
+//       });
+//   }
+//   mysqlCon.end();
+//   res.status(200).send({ success: true, msg: 'Successfully create dummy data' });
+// });
 
 router.get('/list', (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
@@ -12,21 +26,20 @@ router.get('/list', (req, res) => {
   const {
     search, skip, limit, category, userid,
   } = req.query;
-  const until = parseInt(skip, 10) + parseInt(limit, 10);
   let queryWord = '';
   let queryCnt = '';
   if (search === '' && category === '') {
-    queryCnt = `select count(*) as cnt from word where userid = '${userid}' order by created desc `;
-    queryWord = `select * from word where userid = '${userid}' order by created desc limit ${skip},${until}`;
+    queryCnt = `select count(*) as cnt from word where userid = '${userid}' order by created desc;`;
+    queryWord = `select * from word where userid = '${userid}' order by created desc limit ${skip}, ${limit};`;
   } else if (search === '') {
-    queryCnt = `select count(*) as cnt from word where word.userid = '${userid}' and category = '${category}'  order by created desc `;
-    queryWord = `select * from word where userid = '${userid}' and category = '${category}' order by created desc limit ${skip},${until}`;
+    queryCnt = `select count(*) as cnt from word where word.userid = '${userid}' and category = '${category}'  order by created desc;`;
+    queryWord = `select * from word where userid = '${userid}' and category = '${category}' order by created desc limit ${skip}, ${limit};`;
   } else if (category === '') {
-    queryCnt = `select count(*) as cnt from word where word.userid = '${userid}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc `;
-    queryWord = `select * from word where userid = '${userid}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc limit ${skip},${until}`;
+    queryCnt = `select count(*) as cnt from word where word.userid = '${userid}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc;`;
+    queryWord = `select * from word where userid = '${userid}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc limit ${skip}, ${limit};`;
   } else {
-    queryCnt = `select count(*) as cnt from word where word.userid = '${userid}' and category = '${category}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc`;
-    queryWord = `select * from word where userid = '${userid}' and category = '${category}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc limit ${skip},${until}`;
+    queryCnt = `select count(*) as cnt from word where word.userid = '${userid}' and category = '${category}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc;`;
+    queryWord = `select * from word where userid = '${userid}' and category = '${category}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc limit ${skip}, ${limit};`;
   }
   mysqlCon.query(queryCnt, (e1, r1) => {
     console.log(e1);
