@@ -116,12 +116,14 @@
                 <div class="wordText">Pronounce</div>
               </v-row>
             </v-card>
+            <div v-if="wordsList.length === 0" style="text-align:center; margin-top: 50px; font-size: 30px">Empty</div>
             <v-flex v-for="word in wordsList" :key="word.id" class="mt-2 mx-1">
               <div class="pa-1"
               @click="wordCuDialog = { op: 'update', flag: true };
                 wordForm.word=word.word;
                 wordForm.mean=word.mean;
-                wordForm.pronounce=word.pronounce;"
+                wordForm.pronounce=word.pronounce;
+                wordForm.category= word.category === null ? 'All Words' : word.category;"
               >
                 <a><v-row justify="space-between" class="mx-0">
                   <div class="wordText" style="font-family: Noto Sans JP;">{{word.word}}</div>
@@ -184,6 +186,12 @@
               outlined
               type="text"
             ></v-text-field>
+            <v-select v-if="wordCuDialog.op === 'Update'"
+              :items="categories"
+              v-model="wordForm.category"
+              outlined
+              label="Category"
+            ></v-select>
             <v-row justify="end" class="mx-0">
               <v-btn
               class="mr-3"
@@ -219,7 +227,7 @@
                 color="primary"
                 @click="categoryCuDialog.op === 'add' ? createCategory() : updateCategory()"
                 :disabled="invalid || !validated"
-              >Save</v-btn>
+              >Add</v-btn>
               <v-btn color="error" class="ml-3" @click="closeCategoryCuDialog">Cancel</v-btn>
             </v-row>
           </ValidationObserver>
@@ -351,6 +359,7 @@ export default {
   },
   created() {
     this.getUserInfo();
+    this.loadCategory();
     this.loadWords();
   },
   computed: {
@@ -373,6 +382,9 @@ export default {
       handler() {
         this.loadWords();
       },
+    },
+    selectedCategory() {
+      this.loadWords();
     },
   },
   methods: {
@@ -397,7 +409,23 @@ export default {
           this.rtMsg2 = e.response.data.msg;
         });
     },
-    loadCategory() {},
+    loadCategory() {
+      this.$axios
+        .get('/category/list')
+        .then((r) => {
+          console.log(r.data.r);
+
+          this.categories = ['All words'];
+          r.data.r.forEach((elem) => {
+            this.categories.push(elem.category);
+          });
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
     callCudCategory(op) {
       if (op === 'Create') {
         this.categoryForm.category = null;
@@ -418,7 +446,19 @@ export default {
         this.deleteCategory();
       }
     },
-    createCategory() {},
+    createCategory() {
+      this.$axios
+        .post('/category/add', this.categoryForm)
+        .then(() => {
+          this.categories.push(this.categoryForm.category);
+          this.closeCategoryCuDialog();
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
     updateCategory() {},
     deleteCategory() {},
 
@@ -457,7 +497,22 @@ export default {
         });
     },
 
-    updateWord() {},
+    updateWord() {
+      this.wordCuDialog.flag = false;
+      this.wordForm.category = this.wordForm.category === 'All words' ? '' : this.selectedCategory;
+      this.$axios
+        .post('/word/save', this.wordForm)
+        .then((r) => {
+          this.userInfo = r.data.r;
+          this.closeWordCuDialog();
+          this.loadWords();
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
     deleteWord() {},
 
     searchOn() {

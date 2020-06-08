@@ -56,6 +56,7 @@ router.all('*', (req, res, next) => {
 });
 
 router.use('/word', require('./word'));
+router.use('/category', require('./category'));
 router.use('/profile', require('./profile'));
 router.use('/test', require('./test'));
 
