@@ -1,16 +1,15 @@
 <template>
   <v-app id="inspire">
     <v-app-bar elevation="1" app fixed flat absolute>
-      <v-btn icon color="primary" style="margin-right: -5px">
-        <v-icon>mdi-tag-multiple</v-icon>
-      </v-btn>
-      <div class="subTitleStyle">JP Wordbook</div>
+      <a @click="$router.go('/')">
+        <div class="subTitleStyle"><v-icon color="primary" class="mr-1 mt-n1">mdi-tag-multiple</v-icon> JP Wordbook</div>
+      </a>
 
       <v-row class="mx-0" v-if="!$vuetify.breakpoint.xs && getToken">
         <v-spacer></v-spacer>
-        <div @click="$router.push('/')" class="titleStyle" style="margin-left: -42px">HOME</div>
+        <a><div @click="$router.push  ('/')" class="titleStyle" style="margin-left: -42px">HOME</div></a>
         <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-10">|</div>
-        <div @click="$router.push('/test')" class="titleStyle">TEST</div>
+        <a><div @click="$router.push('/test')" class="titleStyle">TEST</div></a>
         <v-spacer></v-spacer>
         <div v-if="getToken" style="margin-top: 3px">
           <a

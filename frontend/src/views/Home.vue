@@ -428,8 +428,6 @@ export default {
       this.$axios
         .get('/category/list')
         .then((r) => {
-          console.log(r.data.r);
-
           this.categories = ['All words'];
           r.data.r.forEach((elem) => {
             this.categories.push(elem.category);
@@ -624,7 +622,6 @@ export default {
       } if (this.selectedWord.pronounce !== this.wordForm.pronounce) {
         return true;
       } if (this.selectedWord.category !== this.wordForm.category) {
-        console.log(this.selectedWord.category, this.wordForm.category);
         return true;
       }
       return false;
