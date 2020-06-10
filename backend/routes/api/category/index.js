@@ -37,30 +37,31 @@ router.post('/add', async (req, res) => {
 router.put('/update', async (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  mysqlCon.query(`insert into categories (category) values('${req.body.category}');`,
+  mysqlCon.query(`update categories set category='${req.body.category}' where category='${req.body.oldCategory}';`,
     (e1, r1) => {
       if (e1) {
         console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });
       } else {
         mysqlCon.end();
-        res.status(200).send({ success: true, msg: 'Add Category' });
+        res.status(200).send({ success: true, msg: 'Update Category' });
       }
     });
 });
 
 
-router.delete('/delete', async (req, res) => {
+router.delete('/delete/:category', async (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  mysqlCon.query(`insert into categories (category) values('${req.body.category}');`,
+  const { category } = req.params;
+  mysqlCon.query(`delete from categories where category='${category}';`,
     (e1, r1) => {
       if (e1) {
         console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });
       } else {
         mysqlCon.end();
-        res.status(200).send({ success: true, msg: 'Add Category' });
+        res.status(200).send({ success: true, msg: 'Delete Category' });
       }
     });
 });

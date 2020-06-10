@@ -90,7 +90,6 @@ router.put('/update', async (req, res) => {
   const query = `update word set mean='${word.mean}', pronounce='${word.pronounce}', category='${word.category}' where word='${word.word}'`;
   mysqlCon.query(query,
     (e1, r1) => {
-      console.log(r1);
       if (e1) {
         console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });
@@ -105,12 +104,10 @@ router.delete('/delete/:word', async (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
 
   const { word } = req.params;
-  console.log(word);
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
   const query = `delete from word where word='${word}'`;
   mysqlCon.query(query,
     (e1, r1) => {
-      console.log(r1);
       if (e1) {
         console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });

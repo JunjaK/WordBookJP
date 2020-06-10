@@ -229,9 +229,9 @@
             <v-row justify="end" class="mx-0">
               <v-btn
                 color="primary"
-                @click="categoryCuDialog.op === 'add' ? createCategory() : updateCategory()"
+                @click="categoryCuDialog.op === 'add' ? createCategory() : beforeUpdateCategory()"
                 :disabled="invalid || !validated"
-              >Add</v-btn>
+              >{{categoryCuDialog.op === 'add' ? 'Add': 'Update'}}</v-btn>
               <v-btn color="error" class="ml-3" @click="closeCategoryCuDialog">Cancel</v-btn>
             </v-row>
           </ValidationObserver>
@@ -244,6 +244,12 @@
         :onFlag="resultDialog"
         :message1="rtMsg1"
         :message2="rtMsg2"
+      />
+      <alert
+        @clickOk="checkConfirm"
+        :onFlag="alertDialog"
+        :message1="warnMsg1"
+        :message2="warnMsg2"
       />
 
       <v-dialog v-model="naverDictDialog" max-width="2000" persistent>
@@ -321,6 +327,7 @@ export default {
       // category
       categoryForm: {
         category: '',
+        oldCategory: '',
       },
       categories: ['All words'],
       categoryOp: ['Create', 'Update', 'Delete'],
@@ -347,6 +354,7 @@ export default {
         rowsPerPage: 30,
       },
       hideMean: false,
+      isDelete: false,
       // dialog
       categoryCuDialog: { op: 'add', flag: false },
       wordCuDialog: { op: 'add', flag: false },
@@ -358,6 +366,8 @@ export default {
 
       rtMsg1: null,
       rtMsg2: null,
+      warnMsg1: null,
+      warnMsg2: null,
       //
     };
   },
@@ -388,6 +398,7 @@ export default {
       },
     },
     selectedCategory() {
+      this.initParams();
       this.loadWords();
     },
   },
@@ -440,14 +451,18 @@ export default {
           this.rtMsg1 = 'All words Category cannot Update';
         } else {
           this.categoryForm.category = this.selectedCategory;
-          this.categoryCuDialog = { op: 'add', flag: true };
+          this.isDelete = false;
+          this.categoryCuDialog = { op: 'update', flag: true };
         }
       } else if (this.selectedCategory === 'All words') {
         this.resultDialog = true;
         this.rtMsg1 = 'All words Category cannot Delete';
       } else {
         this.categoryForm.category = this.selectedCategory;
-        this.deleteCategory();
+        this.alertDialog = true;
+        this.isDelete = true;
+        this.warnMsg1 = 'Warn!!';
+        this.warnMsg2 = 'Delete Category and All Words that belong to Category.';
       }
     },
     createCategory() {
@@ -464,15 +479,20 @@ export default {
         });
     },
     updateCategory() {
+      this.alertDialog = false;
       if (this.selectedCategory === this.categoryForm.category) {
         this.resultDialog = true;
         this.rtMsg1 = 'If there is no change category, Cannot Update!';
         return;
       }
+      this.categoryForm.oldCategory = this.selectedCategory;
       this.$axios
         .put('/category/update', this.categoryForm)
         .then(() => {
+          this.selectedCategory = this.categoryForm.category;
+          this.initParams();
           this.loadCategory();
+          this.loadWords();
           this.closeCategoryCuDialog();
         })
         .catch((e) => {
@@ -482,11 +502,14 @@ export default {
         });
     },
     deleteCategory() {
+      this.alertDialog = false;
       this.$axios
-        .delete('/category/delete', this.categoryForm)
+        .delete(`/category/delete/${this.categoryForm.category}`)
         .then(() => {
+          this.selectedCategory = 'All words';
+          this.initParams();
           this.loadCategory();
-          this.closeCategoryCuDialog();
+          this.loadWords();
         })
         .catch((e) => {
           this.resultDialog = true;
@@ -605,6 +628,20 @@ export default {
         return true;
       }
       return false;
+    },
+    checkConfirm(data) {
+      if (data) {
+        if (this.isDelete) { this.deleteCategory(); } else this.updateCategory();
+      }
+    },
+    beforeUpdateCategory() {
+      this.alertDialog = true;
+      this.warnMsg1 = 'Warn!!';
+      this.warnMsg2 = 'Update Category and All Words that belong to Category.';
+    },
+    initParams() {
+      this.pagination.page = 1;
+      this.params.search = '';
     },
   },
 };
