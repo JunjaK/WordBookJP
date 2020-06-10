@@ -123,7 +123,8 @@
                 wordForm.word=word.word;
                 wordForm.mean=word.mean;
                 wordForm.pronounce=word.pronounce;
-                wordForm.category= word.category === null ? 'All Words' : word.category;"
+                wordForm.category= word.category === null ? 'All words' : word.category;
+                selectedWord = word"
               >
                 <a><v-row justify="space-between" class="mx-0">
                   <div class="wordText" style="font-family: Noto Sans JP;">{{word.word}}</div>
@@ -165,8 +166,10 @@
                 label="Word"
                 v-model="wordForm.word"
                 :error-messages="errors"
-                clearable
+                :readonly="wordCuDialog.op === 'update' ? true : false"
+                :clearabley="wordCuDialog.op === 'update' ? true : false"
                 outlined
+                autofocus
                 type="text"
               ></v-text-field>
             </ValidationProvider>
@@ -186,7 +189,7 @@
               outlined
               type="text"
             ></v-text-field>
-            <v-select v-if="wordCuDialog.op === 'Update'"
+            <v-select v-if="wordCuDialog.op === 'update'"
               :items="categories"
               v-model="wordForm.category"
               outlined
@@ -197,7 +200,7 @@
               class="mr-3"
                 color="primary"
                 @click="wordCuDialog.op === 'add' ? saveWord() : updateWord()"
-                :disabled="invalid || !validated"
+                :disabled="(invalid || !validated)"
               >Save</v-btn>
               <v-btn v-if="wordCuDialog.op === 'update'" color="warning" class="mr-3" @click="deleteWord()">Delete</v-btn>
               <v-btn color="error" @click="closeWordCuDialog">Cancel</v-btn>
@@ -219,6 +222,7 @@
                 :error-messages="errors"
                 clearable
                 outlined
+                autofocus
                 type="text"
               ></v-text-field>
             </ValidationProvider>
@@ -316,9 +320,9 @@ export default {
 
       // category
       categoryForm: {
-        category: null,
+        category: '',
       },
-      categories: ['All Words'],
+      categories: ['All words'],
       categoryOp: ['Create', 'Update', 'Delete'],
       selectedCategory: 'All words',
 
@@ -326,14 +330,14 @@ export default {
       wordsList: [],
       selectedWord: {},
       wordForm: {
-        word: null,
-        mean: null,
-        pronounce: null,
-        uesrid: null,
-        category: null,
+        word: '',
+        mean: '',
+        pronounce: '',
+        uesrid: '',
+        category: '',
       },
       params: {
-        category: null,
+        category: '',
         search: '',
         limit: 30,
       },
@@ -428,7 +432,7 @@ export default {
     },
     callCudCategory(op) {
       if (op === 'Create') {
-        this.categoryForm.category = null;
+        this.categoryForm.category = '';
         this.categoryCuDialog = { op: 'add', flag: true };
       } else if (op === 'Update') {
         if (this.selectedCategory === 'All words') {
@@ -459,8 +463,37 @@ export default {
           this.rtMsg2 = e.response.data.msg;
         });
     },
-    updateCategory() {},
-    deleteCategory() {},
+    updateCategory() {
+      if (this.selectedCategory === this.categoryForm.category) {
+        this.resultDialog = true;
+        this.rtMsg1 = 'If there is no change category, Cannot Update!';
+        return;
+      }
+      this.$axios
+        .put('/category/update', this.categoryForm)
+        .then(() => {
+          this.loadCategory();
+          this.closeCategoryCuDialog();
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
+    deleteCategory() {
+      this.$axios
+        .delete('/category/delete', this.categoryForm)
+        .then(() => {
+          this.loadCategory();
+          this.closeCategoryCuDialog();
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
 
     loadWords() {
       this.params.skip = this.setSkip;
@@ -485,8 +518,7 @@ export default {
       this.wordForm.category = this.selectedCategory === 'All words' ? '' : this.selectedCategory;
       this.$axios
         .post('/word/save', this.wordForm)
-        .then((r) => {
-          this.userInfo = r.data.r;
+        .then(() => {
           this.closeWordCuDialog();
           this.loadWords();
         })
@@ -499,11 +531,16 @@ export default {
 
     updateWord() {
       this.wordCuDialog.flag = false;
-      this.wordForm.category = this.wordForm.category === 'All words' ? '' : this.selectedCategory;
+      this.wordForm.category = this.wordForm.category === 'All words' ? '' : this.wordForm.category;
+      if (!this.checkChange()) {
+        this.resultDialog = true;
+        this.rtMsg1 = 'If there is no change word, Cannot Update!';
+        return;
+      }
       this.$axios
-        .post('/word/save', this.wordForm)
-        .then((r) => {
-          this.userInfo = r.data.r;
+        .put('/word/update', this.wordForm)
+        .then(() => {
+          this.selectedWord = null;
           this.closeWordCuDialog();
           this.loadWords();
         })
@@ -513,7 +550,21 @@ export default {
           this.rtMsg2 = e.response.data.msg;
         });
     },
-    deleteWord() {},
+    deleteWord() {
+      this.wordCuDialog.flag = false;
+      this.$axios
+        .delete(`/word/delete/${this.wordForm.word}`)
+        .then(() => {
+          this.selectedWord = null;
+          this.closeWordCuDialog();
+          this.loadWords();
+        })
+        .catch((e) => {
+          this.resultDialog = true;
+          this.rtMsg1 = `Error! http-error code ${e.response.status}`;
+          this.rtMsg2 = e.response.data.msg;
+        });
+    },
 
     searchOn() {
       if (this.searchMyWordBook) {
@@ -525,20 +576,35 @@ export default {
     },
     notifyClickOk() {
       this.resultDialog = false;
-      this.wordForm.word = null;
-      this.wordForm.mean = null;
-      this.wordForm.pronounce = null;
-      this.categoryForm.category = null;
+      this.wordForm.word = '';
+      this.wordForm.mean = '';
+      this.wordForm.pronounce = '';
+      this.categoryForm.category = '';
     },
     closeWordCuDialog() {
       this.wordCuDialog.flag = false;
-      this.wordForm.word = null;
-      this.wordForm.mean = null;
-      this.wordForm.pronounce = null;
+      this.wordForm.word = '';
+      this.wordForm.mean = '';
+      this.wordForm.pronounce = '';
+      this.wordForm.category = '';
     },
     closeCategoryCuDialog() {
       this.categoryCuDialog.flag = false;
-      this.categoryForm.category = null;
+      this.categoryForm.category = '';
+    },
+    checkChange() {
+      if (this.selectedWord.category === null) {
+        this.selectedWord.category = '';
+      }
+      if (this.selectedWord.mean !== this.wordForm.mean) {
+        return true;
+      } if (this.selectedWord.pronounce !== this.wordForm.pronounce) {
+        return true;
+      } if (this.selectedWord.category !== this.wordForm.category) {
+        console.log(this.selectedWord.category, this.wordForm.category);
+        return true;
+      }
+      return false;
     },
   },
 };

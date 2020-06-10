@@ -42,18 +42,17 @@ router.get('/list', (req, res) => {
     queryWord = `select * from word where userid = '${userid}' and category = '${category}' and (mean like '%${search}%' or pronounce like '%${search}%') order by created desc limit ${skip}, ${limit};`;
   }
   mysqlCon.query(queryCnt, (e1, r1) => {
-    console.log(e1);
-    console.log(r1);
     if (e1) {
+      console.log(e1);
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });
     } else {
       mysqlCon.query(queryWord, (e2, r2) => {
-        console.log(e2);
         if (e2) {
+          console.log(e2);
           res.status(400).send({ success: false, msg: 'Wrong Request!!' });
         } else {
-          res.status(200).send({ success: true, r: { total: r1[0].cnt, list: r2 } });
           mysqlCon.end();
+          res.status(200).send({ success: true, r: { total: r1[0].cnt, list: r2 } });
         }
       });
     }
@@ -73,17 +72,54 @@ router.post('/save', async (req, res) => {
   }
   mysqlCon.query(query,
     (e1, r1) => {
-      console.log(r1);
-      console.log(e1);
       if (e1) {
+        console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });
       } else {
-        res.status(200).send({ success: true, msg: 'save word' });
         mysqlCon.end();
+        res.status(200).send({ success: true, msg: 'save word' });
       }
     });
 });
 
+router.put('/update', async (req, res) => {
+  const mysqlCon = require('../../../lib/dbConnect')();
+
+  const word = req.body;
+  if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+  const query = `update word set mean='${word.mean}', pronounce='${word.pronounce}', category='${word.category}' where word='${word.word}'`;
+  mysqlCon.query(query,
+    (e1, r1) => {
+      console.log(r1);
+      if (e1) {
+        console.log(e1);
+        res.status(400).send({ success: false, msg: 'Wrong Request!!' });
+      } else {
+        mysqlCon.end();
+        res.status(200).send({ success: true, msg: 'update word' });
+      }
+    });
+});
+
+router.delete('/delete/:word', async (req, res) => {
+  const mysqlCon = require('../../../lib/dbConnect')();
+
+  const { word } = req.params;
+  console.log(word);
+  if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+  const query = `delete from word where word='${word}'`;
+  mysqlCon.query(query,
+    (e1, r1) => {
+      console.log(r1);
+      if (e1) {
+        console.log(e1);
+        res.status(400).send({ success: false, msg: 'Wrong Request!!' });
+      } else {
+        mysqlCon.end();
+        res.status(200).send({ success: true, msg: 'delete word' });
+      }
+    });
+});
 
 router.all('*', (req, res, next) => {
   next(createError(404, 'Wrong Url!'));

@@ -44,8 +44,8 @@ router.post('/up', async (req, res) => {
                 if (upErr) {
                   res.status(400).send(upErr);
                 } else {
-                  res.send({ success: true, msg: 'Successfully created account' });
                   mysqlCon.end();
+                  res.send({ success: true, msg: 'Successfully created account' });
                 }
               });
             }
@@ -65,8 +65,8 @@ router.post('/in', (req, res) => {
       res.status(406).send({ success: false, msg: 'Wrong ID or Password!!' });
     } else {
       const token = await signToken(r1[0].id, r1[0].nickname, r1[0].email);
-      res.status(200).send({ success: true, token, nickname: r1[0].nickname });
       mysqlCon.end();
+      res.status(200).send({ success: true, token, nickname: r1[0].nickname });
     }
   });
 });
