@@ -140,7 +140,7 @@
           </div>
           <!--  -->
           <!-- pagination -->
-          <div style="visibility: hidden" :style="{'margin-top': (30-wordsList.length)*5+'px'}">a</div>
+          <div style="visibility: hidden" :style="{'margin-top': (20-wordsList.length)*8+'px'}">a</div>
           <div class="text-center mt-4">
             <v-pagination
             color="secondary"
@@ -347,12 +347,12 @@ export default {
       params: {
         category: '',
         search: '',
-        limit: 30,
+        limit: 20,
       },
       pagination: {
         page: 1,
         totalItems: 0,
-        rowsPerPage: 30,
+        rowsPerPage: 20,
       },
       hideMean: false,
       isDelete: false,
@@ -559,7 +559,11 @@ export default {
       this.wordForm.category = this.wordForm.category === 'All words' ? '' : this.wordForm.category;
       if (!this.checkChange()) {
         this.resultDialog = true;
-        this.rtMsg1 = 'If there is no change word, Cannot Update!';
+        if (this.selectedWord.category === null) {
+          this.rtMsg1 = 'You shoud select Category!';
+        } else {
+          this.rtMsg1 = 'If there is no change word, Cannot Update!';
+        }
         return;
       }
       this.$axios
@@ -618,8 +622,8 @@ export default {
       this.categoryForm.category = '';
     },
     checkChange() {
-      if (this.selectedWord.category === null) {
-        this.selectedWord.category = '';
+      if (this.selectedWord.category === null && this.wordForm.category === '') {
+        return false;
       }
       if (this.selectedWord.mean !== this.wordForm.mean) {
         return true;
