@@ -51,7 +51,7 @@
       </v-layout>
 
       <div class="mr-4">
-        <div class="mt-1 homeDivider"></div>
+        <div class="mt-1 divider"></div>
       </div>
 
       <v-layout justify-center class="mt-12">
@@ -190,7 +190,7 @@
               type="text"
             ></v-text-field>
             <v-select v-if="wordCuDialog.op === 'update'"
-              :items="categories"
+              :items="formCategoryItem"
               v-model="wordForm.category"
               outlined
               label="Category"
@@ -330,6 +330,7 @@ export default {
         oldCategory: '',
       },
       categories: ['All words'],
+      formCategoryItem: [],
       categoryOp: ['Create', 'Update', 'Delete'],
       selectedCategory: 'All words',
 
@@ -427,11 +428,13 @@ export default {
     },
     loadCategory() {
       this.$axios
-        .get('/category/list')
+        .get(`/category/list/${this.getUserId}`)
         .then((r) => {
           this.categories = ['All words'];
+          this.formCategoryItem = [];
           r.data.r.forEach((elem) => {
             this.categories.push(elem.category);
+            this.formCategoryItem.push(elem.category);
           });
         })
         .catch((e) => {
@@ -466,7 +469,7 @@ export default {
     },
     createCategory() {
       this.$axios
-        .post('/category/add', this.categoryForm)
+        .post(`/category/add/${this.getUserId}`, this.categoryForm)
         .then(() => {
           this.categories.push(this.categoryForm.category);
           this.closeCategoryCuDialog();
@@ -646,58 +649,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dialogTitle {
-  color: #343a40;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 300;
-  letter-spacing: 2px;
-}
-.dialogSubTitle {
-  color: #5a5a5a;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 2px;
-}
-.homeDivider {
-  width: 70px;
-  margin: auto;
-  background-color: #8ac6d1;
-  height: 2px;
-}
-.categoryTitle {
-  font-size: 40px;
-  font-weight: 300;
-  color: #3f3f44;
-}
-.categorySelect {
-  font-size: 20px;
-  font-weight: 300;
-  color: #3f3f44;
-}
-.wordText {
-  font-size: 15px;
-  font-weight: 400;
-  color: #3f3f44;
-}
-@media only screen and (max-width: 600px) {
-  .categoryTitle {
-    font-size: 32px;
-  }
-  .categorySelect {
-    font-size: 16px;
-  }
-  .wordText {
-    font-size: 13px;
-  }
-}
-@media only screen and (max-width: 450px) {
-  .categoryTitle {
-    font-size: 28px;
-  }
-  .wordText {
-    font-size: 12px;
-  }
-}
+
 </style>

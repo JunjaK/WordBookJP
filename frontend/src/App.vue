@@ -7,9 +7,11 @@
 
       <v-row class="mx-0" v-if="!$vuetify.breakpoint.xs && getToken">
         <v-spacer></v-spacer>
-        <a><div @click="$router.push  ('/')" class="titleStyle" style="margin-left: -42px">HOME</div></a>
-        <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-10">|</div>
+        <a><div @click="$router.push('/')" class="titleStyle" style="margin-left: -42px">HOME</div></a>
+        <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-7">|</div>
         <a><div @click="$router.push('/test')" class="titleStyle">TEST</div></a>
+        <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-7">|</div>
+        <a><div @click="$router.push('/testresult')" class="titleStyle">TEST RESULT</div></a>
         <v-spacer></v-spacer>
         <div v-if="getToken" style="margin-top: 3px">
           <a
@@ -135,8 +137,58 @@ a:visited {
   font-size: 16px;
   font-weight: 400;
 }
-.wordStyle{
-  font-size: 14px;
+.dialogTitle {
+  color: #343a40;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+.dialogSubTitle {
+  color: #5a5a5a;
+  text-align: center;
+  font-size: 16px;
   font-weight: 400;
+  letter-spacing: 2px;
+}
+.divider {
+  width: 70px;
+  margin: auto;
+  background-color: #8ac6d1;
+  height: 2px;
+}
+.categoryTitle {
+  font-size: 40px;
+  font-weight: 300;
+  color: #3f3f44;
+}
+.categorySelect {
+  font-size: 20px;
+  font-weight: 300;
+  color: #3f3f44;
+}
+.wordText {
+  font-size: 15px;
+  font-weight: 400;
+  color: #3f3f44;
+}
+@media only screen and (max-width: 600px) {
+  .categoryTitle {
+    font-size: 32px;
+  }
+  .categorySelect {
+    font-size: 16px;
+  }
+  .wordText {
+    font-size: 13px;
+  }
+}
+@media only screen and (max-width: 450px) {
+  .categoryTitle {
+    font-size: 28px;
+  }
+  .wordText {
+    font-size: 12px;
+  }
 }
 </style>

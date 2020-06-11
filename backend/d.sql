@@ -59,3 +59,9 @@ create table wordbook(
 
 alter table word add constraint word_category foreign key (category) references categories (category) on delete cascade on update cascade;
 alter table word add constraint word_testNum foreign key (testnum) references testresults (testnum) on delete set null on update cascade;
+
+alter table categories add column userid varchar(20) after category;
+alter table categories add constraint fk_category_userid foreign key  (userid) references user (id) ON DELETE CASCADE on update cascade;
+
+alter table testresults add column userid varchar(20) after testnum;
+alter table testresults add constraint fk_testresults_userid foreign key  (userid) references user (id) ON DELETE CASCADE on update cascade;
