@@ -380,6 +380,7 @@ export default {
     ...mapGetters({
       getToken: 'getAccessToken',
       getNickname: 'getNickname',
+      getUserId: 'getUserId',
     }),
     setSkip() {
       if (this.pagination.page <= 0) return 0;
@@ -518,7 +519,7 @@ export default {
 
     loadWords() {
       this.params.skip = this.setSkip;
-      this.params.userid = this.getNickname;
+      this.params.userid = this.getUserId;
       this.params.category = this.selectedCategory === 'All words' ? '' : this.selectedCategory;
       this.$axios
         .get('/word/list', { params: this.params })

@@ -222,6 +222,7 @@ export default {
         .then((r) => {
           localStorage.setItem('accessToken', r.data.token);
           localStorage.setItem('nickname', r.data.nickname);
+          localStorage.setItem('userId', r.data.id);
           this.$store.dispatch('commitGetToken');
           this.$router.push('/');
         })

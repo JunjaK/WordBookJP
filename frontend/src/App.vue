@@ -45,7 +45,8 @@
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <div class="contentStyle" v-text="item.text"></div>
+              <div v-if="item.text==='Log out'" class="contentStyle" v-text="item.text" @click="logOut"></div>
+              <div v-else class="contentStyle" v-text="item.text"></div>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>

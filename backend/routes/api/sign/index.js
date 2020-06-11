@@ -66,7 +66,9 @@ router.post('/in', (req, res) => {
     } else {
       const token = await signToken(r1[0].id, r1[0].nickname, r1[0].email);
       mysqlCon.end();
-      res.status(200).send({ success: true, token, nickname: r1[0].nickname });
+      res.status(200).send({
+        success: true, token, nickname: r1[0].nickname, id: r1[0].id,
+      });
     }
   });
 });
