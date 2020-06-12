@@ -69,19 +69,64 @@ router.post('/submit', async (req, res) => {
     });
 });
 
-
-router.delete('/delete/:category', async (req, res) => {
+router.get('/list/:userid', (req, res) => {
+  const { userid } = req.params;
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  const { category } = req.params;
-  mysqlCon.query(`delete from categories where category='${category}';`,
+  mysqlCon.query(`select * from testresults where userid='${userid}' order by testnum desc;`, (e1, r1) => {
+    if (e1) {
+      console.log(e1);
+      res.status(400).send({ success: false, msg: 'Wrong Request!!' });
+    } else {
+      mysqlCon.end();
+      res.status(200).send({ success: true, r: r1 });
+    }
+  });
+});
+
+router.get('/each/:testnum', (req, res) => {
+  const { testnum } = req.params;
+  const mysqlCon = require('../../../lib/dbConnect')();
+  if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+  mysqlCon.query(`select * from word where userid='${req.user.id}' and testnum='${testnum}';`, (e1, r1) => {
+    if (e1) {
+      console.log(e1);
+      res.status(400).send({ success: false, msg: 'Wrong Request!!' });
+    } else {
+      mysqlCon.end();
+      res.status(200).send({ success: true, r: r1 });
+    }
+  });
+});
+
+router.put('/renameResult', async (req, res) => {
+  const mysqlCon = require('../../../lib/dbConnect')();
+  if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+  mysqlCon.query(`update testresults set testname='${req.body.testname}' where testnum='${req.body.testnum}';`,
     (e1, r1) => {
       if (e1) {
         console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });
       } else {
         mysqlCon.end();
-        res.status(200).send({ success: true, msg: 'Delete Category' });
+        res.status(200).send({ success: true, msg: 'Update TestResult' });
+      }
+    });
+});
+
+
+router.delete('/deleteResult/:testnum', async (req, res) => {
+  const mysqlCon = require('../../../lib/dbConnect')();
+  if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+  const { testnum } = req.params;
+  mysqlCon.query(`delete from testresults where testnum='${testnum}';`,
+    (e1, r1) => {
+      if (e1) {
+        console.log(e1);
+        res.status(400).send({ success: false, msg: 'Wrong Request!!' });
+      } else {
+        mysqlCon.end();
+        res.status(200).send({ success: true, msg: 'Delete TestResult' });
       }
     });
 });

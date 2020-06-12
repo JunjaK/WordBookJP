@@ -7,7 +7,7 @@
       <div class="dialogSubTitle">{{message2}}</div>
       <v-row justify="end" class="mx-0 mt-5">
         <v-btn small color="error" class="mr-3" @click="$emit('clickOk', true)">Confirm</v-btn>
-        <v-btn small color="primary" @click="onFlag = false">Close</v-btn>
+        <v-btn small color="primary" @click="$emit('clickOk', false)">Close</v-btn>
       </v-row>
     </v-card>
   </v-dialog>

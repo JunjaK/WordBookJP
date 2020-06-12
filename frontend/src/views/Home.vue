@@ -158,7 +158,7 @@
       <v-dialog max-width="500" v-model="wordCuDialog.flag" persistent>
         <v-card max-width="500" outlined class="pa-3">
           <div class="dialogTitle">{{wordCuDialog.op === 'add' ? 'Save Word' : 'Update Word'}}</div>
-          <div class="mt-1 mb-6 homeDivider"></div>
+          <div class="mt-1 mb-6 divider"></div>
           <ValidationObserver ref="obs" v-slot="{ invalid, validated}">
             <ValidationProvider name="id" rules="required" v-slot="{ errors }">
               <v-text-field
@@ -211,7 +211,7 @@
       <v-dialog max-width="500" v-model="categoryCuDialog.flag" persistent>
         <v-card max-width="500" outlined class="pa-3">
           <div class="dialogTitle">{{categoryCuDialog.op === 'add' ? 'Add Category' : 'Update Category'}}</div>
-          <div class="mt-1 mb-6 homeDivider"></div>
+          <div class="mt-1 mb-6 divider"></div>
           <ValidationObserver ref="obs" v-slot="{ invalid, validated}">
             <ValidationProvider name="id" rules="required" v-slot="{ errors }">
               <v-text-field
@@ -636,6 +636,8 @@ export default {
     checkConfirm(data) {
       if (data) {
         if (this.isDelete) { this.deleteCategory(); } else this.updateCategory();
+      } else {
+        this.alertDialog = false;
       }
     },
     beforeUpdateCategory() {

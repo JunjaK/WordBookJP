@@ -80,7 +80,11 @@
         <v-card outlined class="pa-2 my-3">
           <div class="mb-2 contentStyle" style="font-weight: 300"><v-icon class="mr-1">mdi-file-document-box-remove</v-icon>Wrong Words</div>
           <v-flex v-for="(item, index) in wrongAnswer" :key="item.id">
-            <div class="mt-1" style="font-weight: 400; font-size: 16px; color: #3f3f44">{{index+1}}. {{item.word}} : {{item.pronounce}}</div>
+            <v-row justify="space-between" class="mx-0">
+              <div class="mt-1" style="font-weight: 400; font-size: 16px; color: #3f3f44">{{index+1}}.</div>
+              <div class="mt-1" style="font-weight: 400; font-size: 16px; color: #3f3f44">{{item.word}}</div>
+              <div class="mt-1" style="font-weight: 400; font-size: 16px; color: #3f3f44">{{item.pronounce}}</div>
+            </v-row>
           </v-flex>
         </v-card>
         <v-row justify="end" class="mx-0">
@@ -188,7 +192,6 @@ export default {
       this.$axios
         .post('/test/take', form)
         .then((r) => {
-          console.log(r.data.r);
           this.initTest();
           this.testWords = r.data.r;
           this.testWord = this.testWords[0].word;
