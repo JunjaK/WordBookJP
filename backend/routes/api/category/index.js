@@ -9,7 +9,7 @@ router.get('/list/:userid', (req, res) => {
   const { userid } = req.params;
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  mysqlCon.query(`select * from categories where userid=${userid}`, (e1, r1) => {
+  mysqlCon.query(`select * from categories where userid='${userid}'`, (e1, r1) => {
     if (e1) {
       console.log(e1);
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });
