@@ -13,7 +13,7 @@
 - Vue.js
 - Rasberrypi4B Server
 ## ER Diagram
-![ERD](https://github.com/JunjaK/WordBookJP/blob/master/ERD%20Schema.png?raw=true)
+![erd](https://user-images.githubusercontent.com/30404630/84533246-af507380-ad22-11ea-808d-235c48d653b3.png)
 ## Used Opensource
 - Vue.js
 ```
