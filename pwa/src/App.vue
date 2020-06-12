@@ -107,12 +107,12 @@ export default {
         { icon: 'mdi-account-arrow-right', text: 'Log out' },
         { icon: 'mdi-home', text: 'Home', to: { path: '/' } },
         {
-          icon: 'mdi-file-document-edit',
+          icon: 'mdi-file-document',
           text: 'Test',
           to: { path: '/test' },
         },
         {
-          icon: 'mdi-file-document-box-search',
+          icon: 'mdi-book-open',
           text: 'Test Result',
           to: { path: '/testresult' },
         },
