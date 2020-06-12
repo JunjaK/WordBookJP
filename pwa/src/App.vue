@@ -2,39 +2,39 @@
   <v-app id="inspire">
     <v-app-bar elevation="1" app fixed flat absolute>
       <a @click="$router.go('/')">
-        <div class="subTitleStyle"><v-icon color="primary" class="mr-1 mt-n1">mdi-tag-multiple</v-icon> JP Wordbook</div>
+        <div class="subTitleStyle">
+          <v-icon color="primary" class="mr-1 mt-n1">mdi-tag-multiple</v-icon>JP Wordbook
+        </div>
       </a>
 
       <v-row class="mx-0" v-if="!$vuetify.breakpoint.xs && getToken">
         <v-spacer></v-spacer>
-        <a><div @click="$router.push('/')" class="titleStyle" style="margin-left: -42px">HOME</div></a>
+        <a>
+          <div @click="$router.push('/')" class="titleStyle" style="margin-left: -42px">HOME</div>
+        </a>
         <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-7">|</div>
-        <a><div @click="$router.push('/test')" class="titleStyle">TEST</div></a>
+        <a>
+          <div @click="$router.push('/test')" class="titleStyle">TEST</div>
+        </a>
         <div style="color: #8ac6d1; font-size: 22px; margin-top: 0px" class="mx-7">|</div>
-        <a><div @click="$router.push('/testresult')" class="titleStyle">TEST RESULT</div></a>
+        <a>
+          <div @click="$router.push('/testresult')" class="titleStyle">TEST RESULT</div>
+        </a>
         <v-spacer></v-spacer>
         <div v-if="getToken" style="margin-top: 3px">
-          <a
-            @click="logOut()"
-            class="subTitleStyle"
-          >
-            <v-icon color="primary" class="mr-1 mt-n1">mdi-account-arrow-right</v-icon>
-            LOG OUT
+          <a @click="logOut()" class="subTitleStyle">
+            <v-icon color="primary" class="mr-1 mt-n1">mdi-account-arrow-right</v-icon>LOG OUT
           </a>
         </div>
         <div v-else style="margin-top: 3px">
-          <a
-            @click="$router.push('/login')"
-            class="subTitleStyle"
-          >
-            <v-icon color="primary" class="mr-1 mt-n1">mdi-account-arrow-left</v-icon>
-            LOG IN
+          <a @click="$router.push('/login')" class="subTitleStyle">
+            <v-icon color="primary" class="mr-1 mt-n1">mdi-account-arrow-left</v-icon>LOG IN
           </a>
         </div>
       </v-row>
       <v-row v-else>
         <v-spacer></v-spacer>
-        <v-app-bar-nav-icon v-if="getToken" style="color: #8ac6d1" @click="drawer=true"/>
+        <v-app-bar-nav-icon v-if="getToken" style="color: #8ac6d1" @click="drawer=true" />
       </v-row>
     </v-app-bar>
 
@@ -47,20 +47,52 @@
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <div v-if="item.text==='Log out'" class="contentStyle" v-text="item.text" @click="logOut"></div>
+              <div
+                v-if="item.text==='Log out'"
+                class="contentStyle"
+                v-text="item.text"
+                @click="logOut"
+              ></div>
               <div v-else class="contentStyle" v-text="item.text"></div>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
       </v-list>
       <v-divider class="mx-3 my-2"></v-divider>
+      <v-row justify="start" class="ml-3 my-3">
+        <div style="font-size: 15px; font-weight: 400; color:#343a40;">
+          <v-icon size="20" color="primary" class="mr-1 mt-n1">mdi-tag-multiple</v-icon>JP Wordbook
+        </div>
+        <div
+          style="font-size: 15px; font-weight: 400; color:#343a40; margin-left: 15px"
+        >made by Junjak</div>
+      </v-row>
+      <a href="https://github.com/JunjaK/WordBookJP">
+        <div
+          style="font-size: 15px; font-weight: 500; text-align: right; margin-right: 12px"
+        >GitHub Link</div>
+      </a>
     </v-navigation-drawer>
 
-    <v-content>
+    <v-main>
       <router-view />
-    </v-content>
+    </v-main>
 
-    <v-footer></v-footer>
+    <v-footer v-if="!$vuetify.breakpoint.xs">
+      <v-row justify="center" class="mx-0">
+        <div style="font-size: 15px; font-weight: 400; color:#343a40; margin-left: 15px">
+          <v-icon color="primary" class="mr-1 mt-n1">mdi-tag-multiple</v-icon>JP Wordbook
+        </div>
+        <div
+          style="font-size: 15px; font-weight: 400; color:#343a40; margin-left: 15px"
+        >made by Junjak</div>
+      </v-row>
+      <a href="https://github.com/JunjaK/WordBookJP">
+        <div
+          style="font-size: 15px; font-weight: 500; text-align: right; margin-right: 12px"
+        >GitHub Link</div>
+      </a>
+    </v-footer>
   </v-app>
 </template>
 
@@ -74,7 +106,16 @@ export default {
       navMenu: [
         { icon: 'mdi-account-arrow-right', text: 'Log out' },
         { icon: 'mdi-home', text: 'Home', to: { path: '/' } },
-        { icon: 'mdi-file-document-box-search', text: 'Test', to: { path: '/test' } },
+        {
+          icon: 'mdi-file-document-edit',
+          text: 'Test',
+          to: { path: '/test' },
+        },
+        {
+          icon: 'mdi-file-document-box-search',
+          text: 'Test Result',
+          to: { path: '/testresult' },
+        },
       ],
       navIndex: 1,
     };
@@ -114,7 +155,7 @@ a:visited {
   text-decoration: none;
 }
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 .titleStyle {
   color: #3f3f44;
@@ -132,7 +173,7 @@ a:visited {
   font-size: 18px;
   font-weight: 400;
 }
-.smallContentStyle{
+.smallContentStyle {
   font-size: 16px;
   font-weight: 400;
 }
