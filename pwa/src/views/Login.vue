@@ -168,7 +168,6 @@ nav {
 }
 </style>
 
-
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import notify from '../components/notify.vue';
