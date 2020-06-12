@@ -404,15 +404,15 @@ export default {
     },
   },
   methods: {
-    createDummy() {
-      this.$axios.get('/word/dummy')
-        .then((r) => {
-          console.log(r);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    },
+    // createDummy() {
+    //   this.$axios.get('/word/dummy')
+    //     .then((r) => {
+    //       console.log(r);
+    //     })
+    //     .catch((e) => {
+    //       console.log(e);
+    //     });
+    // },
     getUserInfo() {
       this.$axios
         .get('/profile/myinfo')
