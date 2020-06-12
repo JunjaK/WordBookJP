@@ -116,7 +116,7 @@
                 <div class="wordText">Pronounce</div>
               </v-row>
             </v-card>
-            <div v-if="wordsList.length === 0" style="text-align:center; margin-top: 50px; font-size: 30px">Empty</div>
+            <div v-if="wordsList.length === 0" style="text-align:center; margin-top: 50px; font-size: 30px; color: #3f3f44">Empty</div>
             <v-flex v-for="word in wordsList" :key="word.id" class="mt-2 mx-1">
               <div class="pa-1"
               @click="wordCuDialog = { op: 'update', flag: true };

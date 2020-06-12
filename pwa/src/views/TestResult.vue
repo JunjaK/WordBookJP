@@ -4,7 +4,8 @@
     <div class="mx-0">
       <div class="mt-1 divider"></div>
     </div>
-    <v-layout justify-center class="mt-12">
+    <div v-if="testResults.length === 0" style="text-align:center; margin-top: 120px; font-weight: 300; font-size: 50px; color: #3f3f44">Empty</div>
+    <v-layout v-else justify-center class="mt-12">
       <v-flex xs12 sm8 md6>
         <v-flex v-for="(test, index) in testResults" :key="test.id">
           <a>
@@ -89,7 +90,7 @@
           </v-card>
           <div
             v-if="selectedTestResult.words.length === 0"
-            style="text-align:center; margin-top: 50px; font-size: 30px"
+            style="text-align:center; margin-top: 50px; font-size: 30px; color: #3f3f44"
           >Empty</div>
           <v-flex v-for="word in selectedTestResult.words" :key="word.id" class="mt-2 mx-1">
             <div class="pa-1">
