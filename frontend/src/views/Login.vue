@@ -42,6 +42,7 @@
                     clearable
                     filled
                     type="password"
+                    @keydown.enter="Login()"
                   ></v-text-field>
                 </ValidationProvider>
                 <v-row class="mx-0 mt-6">

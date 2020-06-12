@@ -64,4 +64,8 @@ alter table categories add column userid varchar(20) after category;
 alter table categories add constraint fk_category_userid foreign key  (userid) references user (id) ON DELETE CASCADE on update cascade;
 
 alter table testresults add column userid varchar(20) after testnum;
+alter table testresults add column testname varchar(30) after userid;
 alter table testresults add constraint fk_testresults_userid foreign key  (userid) references user (id) ON DELETE CASCADE on update cascade;
+
+
+alter table word 

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid :style="$vuetify.breakpoint.xs ? 'margin-top: 40px' : 'margin-top: 60px'">
-    <div class="categoryTitle" style="text-align: center">Take Result</div>
+    <div class="categoryTitle" style="text-align: center">Test Results</div>
     <div class="mx-0">
       <div class="mt-1 divider"></div>
     </div>

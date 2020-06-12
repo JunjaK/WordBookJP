@@ -177,7 +177,6 @@
               color="primary"
               label="Mean"
               v-model="wordForm.mean"
-              clearable
               outlined
               type="text"
             ></v-text-field>
@@ -185,9 +184,9 @@
               color="primary"
               label="Pronounce"
               v-model="wordForm.pronounce"
-              clearable
               outlined
               type="text"
+              @keydown.enter="wordCuDialog.op === 'add' ? saveWord() : updateWord()"
             ></v-text-field>
             <v-select v-if="wordCuDialog.op === 'update'"
               :items="formCategoryItem"
@@ -220,10 +219,10 @@
                 label="Category"
                 v-model="categoryForm.category"
                 :error-messages="errors"
-                clearable
                 outlined
                 autofocus
                 type="text"
+                @keydown.enter="categoryCuDialog.op === 'add' ? createCategory() : beforeUpdateCategory()"
               ></v-text-field>
             </ValidationProvider>
             <v-row justify="end" class="mx-0">
