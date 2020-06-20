@@ -213,7 +213,6 @@ export default {
         correct: this.correctNum,
         wrong: this.wrongNum,
       };
-      console.log(form);
       this.$axios
         .post('/test/submit', form)
         .then((r) => {
