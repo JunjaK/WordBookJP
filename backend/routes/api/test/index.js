@@ -25,7 +25,6 @@ router.post('/take', async (req, res) => {
   } else {
     query = `select * from word where userid='${setting.userid}' and category='${setting.area}' order by created desc limit 0,20;`;
   }
-  console.log(query);
   mysqlCon.query(query, (e1, r1) => {
     if (e1) {
       console.log(e1);
@@ -44,15 +43,12 @@ router.post('/submit', async (req, res) => {
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
   mysqlCon.query(`insert into testresults (userid, correct, wrong) values('${result.userid}', '${result.correct}', '${result.wrong}');`,
     async (e1, r1) => {
-      console.log(r1);
       if (e1) {
         console.log(e1);
         res.status(400).send({ success: false, msg: 'Wrong Request!!' });
       } else {
         await result.answers.forEach(async (element, index) => {
           let query = null;
-          console.log(element);
-          console.log(element.correct === true);
           if (element.correct) {
             query = `update word set wrong='${0}', testnum='${r1.insertId}' where word='${element.word.word}';`;
           } else {
