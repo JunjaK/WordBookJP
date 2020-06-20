@@ -51,6 +51,8 @@ router.post('/submit', async (req, res) => {
       } else {
         await result.answers.forEach(async (element, index) => {
           let query = null;
+          console.log(element);
+          console.log(element.correct === true);
           if (element.correct) {
             query = `update word set wrong='${0}', testnum='${r1.insertId}' where word='${element.word.word}';`;
           } else {
@@ -88,7 +90,7 @@ router.get('/each/:testnum', (req, res) => {
   const { testnum } = req.params;
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  mysqlCon.query(`select * from word where userid='${req.user.id}' and testnum='${testnum}';`, (e1, r1) => {
+  mysqlCon.query(`select * from word where userid='${req.user.id}' and testnum='${testnum}' and wrong='${1}';`, (e1, r1) => {
     if (e1) {
       console.log(e1);
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });

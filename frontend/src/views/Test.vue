@@ -60,7 +60,7 @@
             outlined
             @keydown.enter="loadNextWord()"
           ></v-text-field>
-          <v-btn block color="primary">{{wordIndex === testUntil ? 'submit' : 'next'}}</v-btn>
+          <v-btn @click="loadNextWord()" block color="primary">{{wordIndex === testUntil ? 'submit' : 'next'}}</v-btn>
         </div>
       </v-card>
     </v-dialog>
@@ -213,6 +213,7 @@ export default {
         correct: this.correctNum,
         wrong: this.wrongNum,
       };
+      console.log(form);
       this.$axios
         .post('/test/submit', form)
         .then((r) => {
@@ -229,11 +230,11 @@ export default {
       const answer = this.testWords[this.wordIndex - 1];
       if (answer.mean.replace(/(\s*)/g, '') === this.mean.replace(/(\s*)/g, '') && answer.pronounce === this.pronounce) {
         this.correctNum += 1;
-        this.answers.push({ corrent: true, word: answer });
+        this.answers.push({ correct: true, word: answer });
       } else {
         this.wrongNum += 1;
         this.wrongAnswer.push(answer);
-        this.answers.push({ corrent: false, word: answer });
+        this.answers.push({ correct: false, word: answer });
       }
       if (this.wordIndex === this.testUntil) {
         this.submitTest();

@@ -4,6 +4,9 @@
     <div class="mx-0">
       <div class="mt-1 divider"></div>
     </div>
+    <div style="text-align: center; font-size: 32px; font-weight: 400; color: #3f3f44; margin-top: 180px" v-if="(testResults.length === 0 && checkResultNum)">
+      There are no test records.
+    </div>
     <v-layout justify-center class="mt-12">
       <v-flex xs12 sm8 md6>
         <v-flex v-for="(test, index) in testResults" :key="test.id">
@@ -194,6 +197,8 @@ export default {
       resultDialog: false,
       rtMsg1: null,
       rtMsg2: null,
+
+      checkResultNum: false,
     };
   },
   created() {
@@ -209,10 +214,12 @@ export default {
   },
   methods: {
     loadTestResults() {
+      this.checkResultNum = false;
       this.$axios
         .get(`/test/list/${this.getUserId}`)
         .then((r) => {
           this.testResults = r.data.r;
+          this.checkResultNum = true;
         })
         .catch((e) => {
           this.resultDialog = true;

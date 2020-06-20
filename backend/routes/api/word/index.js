@@ -5,20 +5,21 @@ const createError = require('http-errors');
 
 const router = express.Router();
 
-// router.get('/dummy', (req, res) => {
-//   const mysqlCon = require('../../../lib/dbConnect')();
-//   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-//   for (let i = 0; i < 5000; i += 1) {
-//     const query = `insert into word (word, mean, pronounce, userid)  values('word${i}', 'mean${i}', 'pronoun${i}', '${1234}')`;
-//     mysqlCon.query(query,
-//       (e1, r1) => {
-//         console.log(r1);
-//         console.log(e1);
-//       });
-//   }
-//   mysqlCon.end();
-//   res.status(200).send({ success: true, msg: 'Successfully create dummy data' });
-// });
+router.get('/dummy', (req, res) => {
+  const mysqlCon = require('../../../lib/dbConnect')();
+  if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
+  console.log(req.user.id);
+  for (let i = 0; i < 5000; i += 1) {
+    const query = `insert into word (word, mean, pronounce, userid)  values('単語${i}', '의미${i}', 'はつおん${i}', '${req.user.id}')`;
+    mysqlCon.query(query, (e1, r1) => {
+      if (e1) {
+        console.log(e1);
+        res.status(400).send({ success: false, msg: 'Wrong Request!!' });
+      }
+    });
+  }
+  res.status(200).send({ success: true, msg: 'Successfully create dummy data' });
+});
 
 router.get('/list', (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
