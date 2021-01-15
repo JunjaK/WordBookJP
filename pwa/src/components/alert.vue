@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="400" v-model="onFlag" persistent>
+  <v-dialog max-width="400" v-model="flag" persistent>
     <v-card outlined max-width="400" class="pa-4">
       <div class="dialogTitle">Alert</div>
       <div class="mt-1 mb-4 signInDivider"></div>
@@ -16,6 +16,10 @@
 <script>
 export default {
   name: 'Notify',
+  model: {
+    prop: 'onFlag',
+    event: 'changeFlag',
+  },
   props: {
     onFlag: {
       type: Boolean,
@@ -28,6 +32,16 @@ export default {
     message2: {
       type: String,
       default: null,
+    },
+  },
+  computed: {
+    flag: {
+      get() {
+        return this.onFlag;
+      },
+      set(e) {
+        this.$emit('changeFlag', e);
+      },
     },
   },
   created() {
