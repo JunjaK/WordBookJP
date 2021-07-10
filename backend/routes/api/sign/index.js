@@ -8,7 +8,6 @@ const secret = require('../../../lib/tokenKey');
 
 const router = express.Router();
 
-
 const signToken = (id, nickname, email) => new Promise((resolve, reject) => {
   const o = {
     issuer: secret.jwt.issuer,
@@ -28,7 +27,7 @@ router.post('/up', async (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
 
   const password = crypto.scryptSync(req.body.password, req.body.id.toString(), 64, { N: 1024 }).toString('hex');
-  await mysqlCon.query(`select id from user where id = '${req.body.id}'`, (e1, r1) => {
+  await mysqlCon.query(`select userId from user where userId = '${req.body.id}'`, (e1, r1) => {
     if (r1.length > 0) {
       res.status(406).send({ success: false, msg: 'Duplicated ID!!' });
     } else {
@@ -40,7 +39,7 @@ router.post('/up', async (req, res) => {
             if (r3.length > 0) {
               res.status(406).send({ success: false, msg: 'Duplicated Email!!' });
             } else {
-              mysqlCon.query(`insert into user (id, password, email, nickname) values('${req.body.id}', '${password}', '${req.body.email}', '${req.body.nickname}')`, (upErr, UpRes) => {
+              mysqlCon.query(`insert into user (userId, password, email, nickname) values('${req.body.id}', '${password}', '${req.body.email}', '${req.body.nickname}')`, (upErr, UpRes) => {
                 if (upErr) {
                   res.status(400).send(upErr);
                 } else {
@@ -60,14 +59,14 @@ router.post('/in', (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
 
   const password = crypto.scryptSync(req.body.password, req.body.id.toString(), 64, { N: 1024 }).toString('hex');
-  mysqlCon.query(`select id, nickname, email, password from user where id = '${req.body.id}' and password = '${password}'`, async (e1, r1) => {
+  mysqlCon.query(`select userId, nickname, email, password from user where userId = '${req.body.id}' and password = '${password}'`, async (e1, r1) => {
     if (r1.length === 0) {
       res.status(406).send({ success: false, msg: 'Wrong ID or Password!!' });
     } else {
-      const token = await signToken(r1[0].id, r1[0].nickname, r1[0].email);
+      const token = await signToken(r1[0].userId, r1[0].nickname, r1[0].email);
       mysqlCon.end();
       res.status(200).send({
-        success: true, token, nickname: r1[0].nickname, id: r1[0].id,
+        success: true, token, nickname: r1[0].nickname, userId: r1[0].userId,
       });
     }
   });

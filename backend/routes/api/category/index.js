@@ -5,11 +5,11 @@ const createError = require('http-errors');
 
 const router = express.Router();
 
-router.get('/list/:userid', (req, res) => {
-  const { userid } = req.params;
+router.get('/list/:userId', (req, res) => {
+  const { userId } = req.params;
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  mysqlCon.query(`select * from categories where userid='${userid}'`, (e1, r1) => {
+  mysqlCon.query(`select * from categories where userId='${userId}'`, (e1, r1) => {
     if (e1) {
       console.log(e1);
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });
@@ -20,11 +20,11 @@ router.get('/list/:userid', (req, res) => {
   });
 });
 
-router.post('/add/:userid', async (req, res) => {
+router.post('/add/:userId', async (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
-  const { userid } = req.params;
+  const { userId } = req.params;
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
-  mysqlCon.query(`insert into categories (category, userid) values('${req.body.category}', '${userid}');`,
+  mysqlCon.query(`insert into categories (category, userId) values('${req.body.category}', '${userId}');`,
     (e1, r1) => {
       if (e1) {
         console.log(e1);

@@ -19,11 +19,11 @@ router.get('/myinfo', async (req, res) => {
   const mysqlCon = require('../../../lib/dbConnect')();
   if (!req.headers.authorization) res.status(401).send({ success: false, msg: 'Unauthroized User!' });
   const resolvedToken = await verifyToken(req.headers.authorization);
-  mysqlCon.query(`select id, nickname, email from user where id = '${resolvedToken.id}'`, (e1, r1) => {
+  mysqlCon.query(`select userId, nickname, email from user where userId = '${resolvedToken.userId}'`, (e1, r1) => {
     if (r1 === undefined) {
       res.status(400).send({ success: false, msg: 'Wrong Request!!' });
     } else {
-      res.status(200).send({ success: true, r: { id: r1[0].id, nickname: r1[0].nickname, email: r1[0].email } });
+      res.status(200).send({ success: true, r: { userId: r1[0].userId, nickname: r1[0].nickname, email: r1[0].email } });
       mysqlCon.end();
     }
   });
