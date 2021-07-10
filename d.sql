@@ -1,58 +1,53 @@
-create table wordbook(
-  word varchar(100) not null primary key, 
-  mean varchar(100), 
-  pronounce varchar(100), 
-  created timestamp, 
+create table word(
+  id INT(10) NOT NULL UNIQUE primary key AUTO_INCREMENT, 
+  word varchar(100) not null, 
+  mean varchar(100) not null, 
+  pronounce varchar(100) not null, 
+  regDt timestamp, 
   wrong boolean, 
-  userid varchar(20),
+  userId INT(10),
   category varchar(30),
-  testnum int(5),
-  foreign key (userid) references user (id), 
-  foreign key (category) references categories (category), 
-  foreign key (testnum) references testresults (testnum)
+  testNum int(10),
+  foreign key (userId) references user (id), 
+  foreign key (testNum) references testResults (testnum)
 );
 
-create table wordbook(
-  word varchar(100) not null primary key, 
-  mean varchar(100), 
-  pronounce varchar(100), 
-  created timestamp, 
-  wrong boolean, 
-  userid varchar(20),
-  category varchar(30),
-  testnum int(5),
-  foreign key (userid) references user (id), 
-  foreign key (category) references categories (category), 
-  foreign key (testnum) references testresults (testnum)
-);
+alter table word
+  add constraint FK_CATEGORY_WORD
+  foreign key (category)
+  references categories(category)
+  on update cascade;
 
 
-create table wordbook(
-  word varchar(100) not null primary key, 
-  mean varchar(100), 
-  pronounce varchar(100), 
-  created timestamp, 
-  wrong boolean, 
-  userid varchar(20),
-  category varchar(30),
-  testnum int(5),
-  foreign key (userid) references user (id), 
-  foreign key (category) references categories (category), 
-  foreign key (testnum) references testresults (testnum)
+create table user(
+  id INT(10) NOT NULL UNIQUE primary key AUTO_INCREMENT, 
+  userId varchar(20) not null UNIQUE, 
+  password varchar(30) NOT NULL, 
+  email varchar(100) not null UNIQUE, 
+  nickname varchar(15) UNIQUE, 
+  regDt timestamp
 );
 
 
-create table wordbook(
-  word varchar(100) not null primary key, 
-  mean varchar(100), 
-  pronounce varchar(100), 
-  created timestamp, 
-  wrong boolean, 
-  userid varchar(20),
-  category varchar(30),
-  testnum int(5),
-  foreign key (userid) references user (id), 
-  foreign key (category) references categories (category), 
-  foreign key (testnum) references testresults (testnum)
+create table testResults(
+  testNum int(10) not null UNIQUE primary key AUTO_INCREMENT, 
+  tetName varchar(100) not null, 
+  collect int(5) DEFAULT 0, 
+  wrong int(5) DEFAULT 0, 
+  userId INT(10),
+  foreign key (userId) references user (id)
+);
+
+alter table testResults
+  add constraint FK_USER_TESTRESULTS
+  foreign key (userId)
+  references user(userId)
+
+
+create table categories(
+  id INT(10) NOT NULL UNIQUE primary key AUTO_INCREMENT,
+  category varchar(30) not null UNIQUE,
+  userId INT(10),
+  foreign key (userId) references user (id)
 );
 
